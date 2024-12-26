@@ -1,7 +1,6 @@
 ---
 import { settings } from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import Cta from "@/layouts/components/Cta.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
 import Post from "@/layouts/partials/Post.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
@@ -10,7 +9,7 @@ import { markdownify } from "@/lib/utils/textConverter";
 import { Image } from "astro:assets";
 import { getEntryBySlug } from "astro:content";
 const homepage = await getEntryBySlug("homepage", "index");
-const { banner, call_to_action } = homepage.data;
+const { banner } = homepage.data;
 const posts = await getSinglePage("posts");
 const sortPostByDate = sortByDate(posts);
 const totalPages = Math.ceil(posts.length / settings.pagination);
@@ -61,5 +60,4 @@ const totalPages = Math.ceil(posts.length / settings.pagination);
     </div>
   </div>
   <!-- ./End Blogs -->
-  <Cta cta={call_to_action} />
 </Base>

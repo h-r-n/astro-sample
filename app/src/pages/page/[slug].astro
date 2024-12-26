@@ -8,7 +8,6 @@ import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import { markdownify } from "@/lib/utils/textConverter";
 import { getEntryBySlug } from "astro:content";
-import Cta from "@/layouts/components/Cta.astro";
 
 const homepage = await getEntryBySlug("homepage", "index");
 
@@ -26,7 +25,7 @@ export async function getStaticPaths() {
   }
   return paths;
 }
-const { banner, call_to_action } = homepage.data;
+const { banner } = homepage.data;
 const { slug } = Astro.params;
 const posts = await getSinglePage(config.settings.blog_folder as any);
 const sortedPosts = sortByDate(posts);
@@ -80,6 +79,4 @@ const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
       </div>
     </div>
   </section>
-
-  <Cta cta={call_to_action} />
 </Base>
