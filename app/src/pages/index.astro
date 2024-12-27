@@ -45,17 +45,13 @@ const totalPages = Math.ceil(posts.length / settings.pagination);
   <!-- Blogs -->
   <div class="section">
     <div class="container">
-      <div class="row px-3">
-        <div class="mx-auto px-0 lg:col-8">
-          <div class="rounded py-12 px-9 shadow md:p-[60px]">
-            {
-              sortPostByDate
-                .slice(0, settings.pagination)
-                .map((post) => <Post post={post} />)
-            }
-            <Pagination currentPage={1} totalPages={totalPages} />
-          </div>
-        </div>
+      <div class="row gy-5 gx-4">
+        {
+          sortPostByDate.slice(0, settings.pagination).map((post) => (
+            <Post post={post} />
+          ))
+        }
+        <Pagination currentPage={1} totalPages={totalPages} />
       </div>
     </div>
   </div>

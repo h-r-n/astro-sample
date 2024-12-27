@@ -7,10 +7,7 @@ import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
-import { markdownify } from "@/lib/utils/textConverter";
-import { getEntryBySlug } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
-import { Image } from "astro:assets";
 
 export const getStaticPaths = async ({ paginate }: GetStaticPathsOptions) => {
   const { blog_folder, pagination } = config.settings;
@@ -31,56 +28,26 @@ export const getStaticPaths = async ({ paginate }: GetStaticPathsOptions) => {
   }).flat();
 };
 
-const homepage = await getEntryBySlug("homepage", "index");
-const { banner } = homepage.data;
 const { page } = Astro.props;
 const { category } = Astro.params;
 ---
 
 <Base title={category}>
-  <!-- Banner -->
-  <section
-    class="banner"
-    style="background-image: url('/images/banner/banner-bg.svg')"
-  >
-    <div class="container">
-      <div class="row">
-        <div class="lg:col-6">
-          {
-            banner?.title && (
-              <h1 set:html={markdownify(banner?.title)} class="h2 mb-8" />
-            )
-          }
-        </div>
-      </div>
-      <div class="banner-illustration">
-        {
-          banner?.image && (
-            <Image src={banner?.image} width={768} height={385} alt="" />
-          )
-        }
-      </div>
-    </div>
-  </section>
-  <!-- ./End Banner -->
-
+  <!-- Blogs -->
   <div class="section">
     <div class="container">
-      <div class="row px-3">
-        <div class="mx-auto px-0 lg:col-8">
-          <h1 class="h2 mb-8">
-            Posts related to <span class="text-primary">{category}</span> category
-          </h1>
-          <div class="rounded px-9 py-12 shadow md:p-[60px]">
-            {page.data.map((post: any) => <Post post={post} />)}
-            <Pagination
-              section={`categories/${category}`}
-              currentPage={page.currentPage}
-              totalPages={page.lastPage}
-            />
-          </div>
-        </div>
+      <div class="row gy-5 gx-4">
+        <h1 class="h2 mb-8">
+          Posts related to <span class="text-primary">{category}</span> category
+        </h1>
+        {page.data.map((post: any) => <Post post={post} />)}
+        <Pagination
+          section={`categories/${category}`}
+          currentPage={page.currentPage}
+          totalPages={page.lastPage}
+        />
       </div>
     </div>
   </div>
+  <!-- ./End Blogs -->
 </Base>

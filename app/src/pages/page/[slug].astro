@@ -67,16 +67,14 @@ const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
   </section>
   <!-- ./End Banner -->
 
-  <section class="section">
+  <!-- Blogs -->
+  <div class="section">
     <div class="container">
-      <div class="row">
-        <div class="mx-auto px-0 lg:col-8">
-          <div class="rounded-xl p-[60px] shadow">
-            {currentPosts.map((post, i) => <Post post={post} />)}
-            <Pagination totalPages={totalPages} currentPage={currentPage} />
-          </div>
-        </div>
+      <div class="row gy-5 gx-4">
+        {currentPosts.map((post, i) => <Post post={post} />)}
+        <Pagination totalPages={totalPages} currentPage={currentPage} />
       </div>
     </div>
-  </section>
+  </div>
+  <!-- ./End Blogs -->
 </Base>

@@ -4,8 +4,8 @@ image: "/images/post/post-1.jpg"
 authors: ["Mark Dinn"]
 date: 2019-11-07T05:00:00Z
 description: "This is meta description"
-categories: ["Park", "Movie"]
-tags: ["DisneyWorld", "Disney+"]
+categories: []
+tags: []
 type: "post"
 ---
 
