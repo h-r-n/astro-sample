@@ -9,6 +9,10 @@
       "url": "/posts"
     },
     {
+      "name": "Category",
+      "url": "/categories"
+    },
+    {
       "name": "Contact",
       "url": "/contact"
     },

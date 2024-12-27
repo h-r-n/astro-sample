@@ -1,5 +1,4 @@
 ---
-import { Image } from "astro:assets";
 import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
@@ -7,8 +6,6 @@ import Post from "@/layouts/partials/Post.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
-import { markdownify } from "@/lib/utils/textConverter";
-import { getEntryBySlug } from "astro:content";
 const { blog_folder, pagination } = config.settings;
 
 export async function getStaticPaths() {
@@ -23,40 +20,12 @@ export async function getStaticPaths() {
 }
 
 const { category } = Astro.params;
-const homepage = await getEntryBySlug("homepage", "index");
-const { banner } = homepage.data;
 const posts = await getSinglePage(blog_folder as any);
 const filterByTags = taxonomyFilter(posts, "categories", category);
 const totalPages = Math.ceil(filterByTags.length / pagination);
 ---
 
 <Base title={category as any}>
-  <!-- Banner -->
-  <section
-    class="banner"
-    style="background-image: url('/images/banner/banner-bg.svg')"
-  >
-    <div class="container">
-      <div class="row">
-        <div class="lg:col-6">
-          {
-            banner?.title && (
-              <h1 set:html={markdownify(banner?.title)} class="h2 mb-8" />
-            )
-          }
-        </div>
-      </div>
-      <div class="banner-illustration">
-        {
-          banner?.image && (
-            <Image src={banner?.image} width={768} height={385} alt="" />
-          )
-        }
-      </div>
-    </div>
-  </section>
-  <!-- ./End Banner -->
-
   <div class="section">
     <div class="container">
       <div class="row px-3">
