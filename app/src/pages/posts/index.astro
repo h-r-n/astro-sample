@@ -1,0 +1,28 @@
+---
+import { settings } from "@/config/config.json";
+import Base from "@/layouts/Base.astro";
+import Pagination from "@/layouts/components/Pagination.astro";
+import Post from "@/layouts/partials/Post.astro";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+const posts = await getSinglePage("posts");
+const sortPostByDate = sortByDate(posts);
+const totalPages = Math.ceil(posts.length / settings.pagination);
+---
+
+<Base>
+  <!-- Blogs -->
+  <div class="section">
+    <div class="container">
+      <div class="row gy-5 gx-4">
+        {
+          sortPostByDate.slice(0, settings.pagination).map((post) => (
+            <Post post={post} />
+          ))
+        }
+        <Pagination section={"posts"} currentPage={1} totalPages={totalPages} />
+      </div>
+    </div>
+  </div>
+  <!-- ./End Blogs -->
+</Base>
