@@ -4,7 +4,8 @@ image: "/images/post/post-3.jpg"
 authors: ["Mark Dinn"]
 date: 2019-11-12T05:00:00Z
 description: "This is meta description"
-categories: ["Hugo"]
+categories: ["Park", "Movie"]
+tags: ["DisneySea", "Disney+"]
 type: "post"
 ---
 
