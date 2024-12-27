@@ -33,6 +33,15 @@ module.exports = {
       center: true,
       padding: "2rem",
     },
+    borderWidth: {
+      DEFAULT: '1px',
+      '0': '0',
+      '2': '2px',
+      '3': '3px',
+      '4': '4px',
+      '6': '6px',
+      '8': '8px',
+    },
     extend: {
       colors: {
         text: theme.colors.default.text_color.default,
@@ -46,16 +55,22 @@ module.exports = {
         "theme-dark": theme.colors.default.theme_color.theme_dark,
       },
       fontSize: {
-        base: font_base + "px",
-        h1: h1 + "rem",
-        "h1-sm": h1 * 0.8 + "rem",
-        h2: h2 + "rem",
-        "h2-sm": h2 * 0.8 + "rem",
-        h3: h3 + "rem",
-        "h3-sm": h3 * 0.8 + "rem",
-        h4: h4 + "rem",
-        h5: h5 + "rem",
-        h6: h6 + "rem",
+        base: font_base + "px", // 16px
+        h1: h1 + "rem", // 48.8281px
+        "h1-sm": h1 * 0.8 + "rem", // 39.0625px
+        "h1-prose": 24 + "px",
+        "h1-prose-sm": 18 + "px",
+        h2: h2 + "rem", // 39.0625px
+        "h2-sm": h2 * 0.8 + "rem", // 31.25px
+        "h2-prose": 22 + "px",
+        "h2-prose-sm": 17 + "px",
+        h3: h3 + "rem", // 31.25px
+        "h3-sm": h3 * 0.8 + "rem", // 25px
+        "h3-prose": 20 + "px",
+        "h3-prose-sm": 16 + "px",
+        h4: h4 + "rem", // 25px
+        h5: h5 + "rem", // 1.25rem(20px)
+        h6: h6 + "rem", // 1rem(16px)
       },
       fontFamily: {
         primary: ["var(--font-primary)", fontPrimaryType],
