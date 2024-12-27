@@ -13,12 +13,12 @@
       "url": "/categories"
     },
     {
-      "name": "Contact",
-      "url": "/contact"
+      "name": "Tag",
+      "url": "/tags"
     },
     {
-      "name": "Elements",
-      "url": "/elements"
+      "name": "Contact",
+      "url": "/contact"
     }
   ],
   "footer": [
@@ -29,6 +29,10 @@
     {
       "name": "Privacy Policy",
       "url": "/privacy-policy"
+    },
+    {
+      "name": "Elements",
+      "url": "/elements"
     }
   ]
 }
