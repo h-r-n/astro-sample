@@ -35,6 +35,7 @@ const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
   <div class="section">
     <div class="container">
       <div class="row gy-5 gx-4">
+        <h1 class="h2 mb-8">Latest Posts</h1>
         {currentPosts.map((post, i) => <Post post={post} />)}
         <Pagination section={"posts"} totalPages={totalPages} currentPage={currentPage} />
       </div>
