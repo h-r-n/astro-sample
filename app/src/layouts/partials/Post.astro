@@ -1,76 +1,66 @@
 ---
-import config from "@/config/config.json";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { Image } from "astro:assets";
+import { BiCalendarEdit, BiCategoryAlt } from "react-icons/bi";
+import { settings } from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
-const authors = await getSinglePage("authors");
-const { summary_length } = config.settings;
 const { post } = Astro.props;
 ---
 
-<div class="card mb-12 border-b border-border pb-[30px]">
-  <!-- {
-    post.data.image && (
-      <Image
-        class="rounded-lg"
-        src={post.data.image}
-        alt={post.data.title}
-        width={445}
-        height={230}
-      />
-    )
-  } -->
-
-  <h3 class="h4">
+<div class="col-12 sm:col-6">
+  {post.data.image && (
     <a
       href={`/posts/${post.slug}`}
-      class="block font-normal text-primary hover:underline"
+      class="rounded-lg block hover:text-primary overflow-hidden group"
+    >
+      <Image
+        class="group-hover:scale-[1.03] transition duration-300 w-full"
+        src={post.data.image}
+        alt={post.data.title}
+        width="445"
+        height="230"
+      />
+    </a>
+  )}
+  <ul class="mt-6 mb-4 flex flex-wrap items-center text-text">
+    <li class="mr-5 flex items-center flex-wrap font-medium">
+      <BiCalendarEdit className="mr-1 h-5 w-5 text-gray-600" />
+      <>{dateFormat(post.data.date)}</>
+    </li>
+    <li class="mr-5 flex items-center flex-wrap">
+      <BiCategoryAlt className="mr-1 h-[18px] w-[18px] text-gray-600" />
+      <>
+        <ul>
+          {post.data.categories.map((category: string, i: number) => (
+            <li class="inline-block">
+              <a
+                href={`/categories/${slugify(category)}`}
+                class="mr-2 hover:text-primary font-medium"
+              >
+                {humanize(category)}
+                {i !== post.data.categories.length - 1 && ","}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </>
+    </li>
+  </ul>
+  <h3 class="mb-4">
+    <a
+      href={`/posts/${post.slug}`}
+      class="block hover:text-primary transition duration-300"
     >
       {post.data.title}
     </a>
   </h3>
-  <ul class="mb-4 mt-1.5 flex flex-wrap items-center space-x-3 text-light">
-    <li>
-      {
-        authors
-          .filter((author) =>
-            post.data.authors
-              .map((author: string) => slugify(author))
-              .includes(slugify(author.data.title)),
-          )
-          .map((author) => (
-            <a
-              href={`/authors/${slugify(author.data.title)}`}
-              class="flex items-center hover:text-primary hover:underline"
-            >
-              <span>{author.data.title}</span>
-            </a>
-          ))
-      }
-    </li>
-    <li>{dateFormat(post.data.date)}</li>
-    <li>
-      <ul>
-        {
-          post.data.categories.map((category: string) => (
-            <li class="inline-block">
-              <a
-                href={`/categories/${slugify(category)}`}
-                class="mr-3 hover:text-primary hover:underline"
-              >
-                {humanize(category)}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </li>
-  </ul>
-  <p class="text-lg text-text">
-    {plainify(post.body?.slice(0, Number(summary_length)))}
+  <p class="text-text">
+    {plainify(
+      post.body?.slice(
+        0,
+        Number(settings.summary_length)
+      )
+    )}
+    ...
   </p>
-  <a
-    class="mt-3 inline-block border-b border-primary py-1 text-[15px] leading-[22px] text-primary"
-    href={`/posts/${post.slug}`}>Read More</a
-  >
 </div>
