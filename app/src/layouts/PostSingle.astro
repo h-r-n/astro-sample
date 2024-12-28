@@ -1,14 +1,14 @@
 ---
 import { Image } from "astro:assets";
-import { getSinglePage } from "@/lib/contentParser.astro";
+import { BiTime, BiFolder, BiSolidFolder, BiSolidPurchaseTag } from "react-icons/bi";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
-import type { Post, PostData } from "@/types";
+import type { PostData } from "@/types";
 
-const allAuthors: Post[] = await getSinglePage("authors");
 const { post } = Astro.props;
 const { Content } = await post.render();
-const { title, authors, categories, image, date, tags }: PostData = post.data;
+const { title, categories, image, date, tags }: PostData = post.data;
+console.log(tags)
 ---
 
 <section class="section">
@@ -21,40 +21,26 @@ const { title, authors, categories, image, date, tags }: PostData = post.data;
             <ul
               class="mt-4 mb-8 flex flex-wrap items-center space-x-3 text-text"
             >
-              <li>
-                {
-                  allAuthors
-                    .filter((author) =>
-                      authors
-                        .map((author) => slugify(author))
-                        .includes(slugify(author.data.title)),
-                    )
-                    .map((author, i) => (
-                      <a
-                        href={`/authors/${slugify(author.slug)}`}
-                        class="flex items-center hover:text-primary hover:underline"
-                      >
-                        <span>{author.data.title}</span>
-                      </a>
-                    ))
-                }
+              <li class="mr-5 flex items-center flex-wrap font-medium">
+                <BiTime className="mr-2 h-5 w-5 text-gray-600" />
+                <span class="text-sm">{dateFormat(date)}</>
               </li>
-              <li>{dateFormat(date)}</li>
-              <li>
-                <ul>
-                  {
-                    categories.map((category: string) => (
+              <li class="mr-5 flex items-center flex-wrap">
+                <BiFolder className="mr-2 h-[18px] w-[18px] text-gray-600" />
+                <>
+                  <ul>
+                    {categories.map((category: string, i: number) => (
                       <li class="inline-block">
                         <a
                           href={`/categories/${slugify(category)}`}
-                          class="mr-3 hover:text-primary hover:underline"
+                          class="mr-2 rounded-md border-solid border border-gray-600 hover:text-primary hover:border-primary text-xs font-medium px-1 py-0.5"
                         >
                           {humanize(category)}
                         </a>
                       </li>
-                    ))
-                  }
-                </ul>
+                    ))}
+                  </ul>
+                </>
               </li>
             </ul>
             {
@@ -72,6 +58,40 @@ const { title, authors, categories, image, date, tags }: PostData = post.data;
               <Content />
               <!-- <Markdown content={post.body} components={shortcodes} /> -->
             </div>
+            <li class="mb-1 flex items-center flex-wrap">
+              <BiSolidFolder className="mr-2 h-[18px] w-[18px] text-gray-600" />
+              <>
+                <ul>
+                  {categories.map((category: string, i: number) => (
+                    <li class="inline-block">
+                      <a
+                        href={`/categories/${slugify(category)}`}
+                        class="mr-2 rounded-md border-solid border border-gray-600 hover:text-primary hover:border-primary text-xs font-medium px-1 py-0.5"
+                      >
+                        {humanize(category)}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            </li>
+            <li class="flex items-center flex-wrap">
+              <BiSolidPurchaseTag className="mr-2 h-[18px] w-[18px] text-gray-600" />
+              <>
+                <ul>
+                  {tags.map((tag: string, i: number) => (
+                    <li class="inline-block">
+                      <a
+                        href={`/tags/${slugify(tag)}`}
+                        class="mr-3 hover:text-primary hover:border-primary text-sm font-medium"
+                      >
+                        #{humanize(tag)}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            </li>
           </article>
         </div>
       </div>

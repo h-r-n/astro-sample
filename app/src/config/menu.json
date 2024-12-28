@@ -15,10 +15,6 @@
     {
       "name": "Tag",
       "url": "/tags"
-    },
-    {
-      "name": "Contact",
-      "url": "/contact"
     }
   ],
   "footer": [
@@ -29,10 +25,6 @@
     {
       "name": "Privacy Policy",
       "url": "/privacy-policy"
-    },
-    {
-      "name": "Elements",
-      "url": "/elements"
     }
   ]
 }

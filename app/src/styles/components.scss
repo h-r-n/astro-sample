@@ -90,9 +90,10 @@
 .content {
   @apply prose max-w-none;
   @apply prose-headings:mt-[.5em] prose-headings:mb-[.9em] prose-headings:font-bold prose-headings:text-dark;
-  @apply prose-h1:text-h1-sm md:prose-h1:text-h1;
-  @apply prose-h2:text-h2-sm md:prose-h2:text-h2;
-  @apply prose-h3:text-h3-sm md:prose-h3:text-h3;
+  @apply prose-h1:text-h1-prose-sm md:prose-h1:text-h1-prose;
+  @apply prose-h2:text-h2-prose-sm md:prose-h2:text-h2-prose prose-h2:text-primary prose-h2:bg-white prose-h2:px-5 prose-h2:py-4 prose-h2:border-2 prose-h2:border-solid prose-h2:border-primary prose-h2:shadow-[5px_8px_0px_rgba(232,80,91)];
+  @apply prose-h3:text-h3-prose-sm md:prose-h3:text-h3-prose prose-h3:text-primary prose-h3:px-5 prose-h3:py-3 prose-h3:border-l-6 prose-h3:border-solid prose-h3:border-primary prose-h3:relative;
+  @apply prose-h3:before:absolute prose-h3:before:left-0 prose-h3:before:top-0 prose-h3:before:w-1.5 prose-h3:before:h-full prose-h3:before:bg-primary/50;
   @apply prose-hr:border-border;
   @apply prose-p:text-base prose-p:text-text;
   @apply prose-blockquote:border-primary prose-blockquote:bg-theme-light prose-blockquote:py-1 prose-blockquote:px-4;
@@ -107,6 +108,27 @@
   @apply prose-ol:list-none;
   @apply prose-td:px-3 prose-td:py-4;
   @apply prose-li:relative prose-li:text-text prose-li:before:absolute prose-li:before:-left-6 prose-li:before:top-2 prose-li:before:h-[22px] prose-li:before:w-6 prose-li:before:bg-[url('/images/pointing-right.svg')] prose-li:before:bg-[length:20px_16px] prose-li:before:bg-no-repeat prose-li:before:content-[''];
+  
+  // デフォルトの表記はこちら
+  // @apply prose max-w-none;
+  // @apply prose-headings:mt-[.5em] prose-headings:mb-[.9em] prose-headings:font-bold prose-headings:text-dark;
+  // @apply prose-h1:text-h1-sm md:prose-h1:text-h1;
+  // @apply prose-h2:text-h2-sm md:prose-h2:text-h2;
+  // @apply prose-h3:text-h3-sm md:prose-h3:text-h3;
+  // @apply prose-hr:border-border;
+  // @apply prose-p:text-base prose-p:text-text;
+  // @apply prose-blockquote:border-primary prose-blockquote:bg-theme-light prose-blockquote:py-1 prose-blockquote:px-4;
+  // @apply prose-code:px-1 prose-code:text-primary;
+  // @apply prose-pre:rounded-none;
+  // @apply prose-strong:text-dark;
+  // @apply prose-a:text-primary prose-a:no-underline hover:prose-a:underline;
+  // @apply prose-table:overflow-hidden prose-table:border prose-table:border-border;
+  // @apply prose-thead:border-border prose-thead:bg-theme-light prose-th:py-4 prose-th:px-4 prose-th:text-dark;
+  // @apply prose-tr:border-border;
+  // @apply prose-ul:list-none;
+  // @apply prose-ol:list-none;
+  // @apply prose-td:px-3 prose-td:py-4;
+  // @apply prose-li:relative prose-li:text-text prose-li:before:absolute prose-li:before:-left-6 prose-li:before:top-2 prose-li:before:h-[22px] prose-li:before:w-6 prose-li:before:bg-[url('/images/pointing-right.svg')] prose-li:before:bg-[length:20px_16px] prose-li:before:bg-no-repeat prose-li:before:content-[''];
 }
 
 //banner

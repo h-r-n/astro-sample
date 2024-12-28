@@ -15,6 +15,7 @@ const totalPages = Math.ceil(posts.length / settings.pagination);
   <div class="section">
     <div class="container">
       <div class="row gy-5 gx-4">
+        <h1 class="h2 mb-8">Latest Posts</h1>
         {
           sortPostByDate.slice(0, settings.pagination).map((post) => (
             <Post post={post} />

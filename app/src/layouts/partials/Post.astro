@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { BiCalendarEdit, BiCategoryAlt } from "react-icons/bi";
+import { BiTime, BiFolder } from "react-icons/bi";
 import { settings } from "@/config/config.json";
 import dateFormat from "@/lib/utils/dateFormat";
 import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
@@ -24,21 +24,20 @@ const { post } = Astro.props;
   )}
   <ul class="mt-6 mb-4 flex flex-wrap items-center text-text">
     <li class="mr-5 flex items-center flex-wrap font-medium">
-      <BiCalendarEdit className="mr-1 h-5 w-5 text-gray-600" />
-      <>{dateFormat(post.data.date)}</>
+      <BiTime className="mr-2 h-5 w-5 text-gray-600" />
+      <span class="text-sm">{dateFormat(post.data.date)}</>
     </li>
     <li class="mr-5 flex items-center flex-wrap">
-      <BiCategoryAlt className="mr-1 h-[18px] w-[18px] text-gray-600" />
+      <BiFolder className="mr-2 h-[18px] w-[18px] text-gray-600" />
       <>
         <ul>
           {post.data.categories.map((category: string, i: number) => (
             <li class="inline-block">
               <a
                 href={`/categories/${slugify(category)}`}
-                class="mr-2 hover:text-primary font-medium"
+                class="mr-2 rounded-md border-solid border border-gray-600 hover:text-primary hover:border-primary text-xs font-medium px-1 py-0.5"
               >
                 {humanize(category)}
-                {i !== post.data.categories.length - 1 && ","}
               </a>
             </li>
           ))}
