@@ -1,6 +1,6 @@
 // section style
 .section {
-  @apply py-20;
+  @apply py-10;
 }
 
 // container
@@ -26,6 +26,18 @@
       @apply block h-11 w-11 rounded-full border border-primary bg-body text-center text-primary transition-all duration-300 hover:bg-primary hover:text-body;
       svg {
         @apply m-auto h-11;
+      }
+    }
+  }
+  &.sm {
+    @apply space-x-2;
+    li {
+      @apply inline-block;
+      a {
+        @apply block h-6 w-6 rounded-full border border-primary bg-body text-center text-primary transition-all duration-300 hover:bg-primary hover:text-body;
+        svg {
+          @apply m-auto h-6;
+        }
       }
     }
   }
