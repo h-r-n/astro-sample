@@ -20,7 +20,8 @@ const { main }: { main: NavigationLink[] } = menu;
 const currentPath = new URL(Astro.request.url).pathname;
 ---
 
-<header class={`header ${currentPath === "/" ? "fixed" : "sticky"}`}>
+<!-- <header class={`header ${currentPath === "/" ? "fixed" : "sticky"}`}> -->
+<header class="header sticky">
   <nav class="navbar container">
     <!-- logo -->
     <div class="order-0">
