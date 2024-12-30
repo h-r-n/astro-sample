@@ -1,6 +1,7 @@
 ---
 import Base from "@/layouts/Base.astro";
 import PostSingle from "@/layouts/PostSingle.astro";
+import ScrollToTop from "@/components/ScrollToTop.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import config from "@/config/config.json";
 
@@ -27,4 +28,5 @@ const { title, meta_title, description, image } = post.data;
   image={image}
 >
   <PostSingle post={post} />
+  <ScrollToTop />
 </Base>
