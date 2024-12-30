@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { BiTime, BiFolder, BiSolidFolder, BiSolidPurchaseTag } from "react-icons/bi";
+import { BiRevision, BiFolder, BiSolidFolder, BiSolidPurchaseTag, BiInfoCircle } from "react-icons/bi";
 import { dateFormat, dateBlogFormat } from "@/lib/utils/dateFormat";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import type { PostData } from "@/types";
@@ -17,38 +17,34 @@ const blogDate = dateBlogFormat(date);
       <div class="mx-auto">
         <div class="rounded-xl p-2.5 lg:p-8 shadow md:p-[60px]">
           <article>
-            <div class="flex items-center flex-row-reverse">
+            <div class="flex items-center flex-row-reverse mb-2.5">
               <h1 set:html={markdownify(title)} class="w-full leading-[1.4rem] text-lg sm:text-2xl" />
               <time class="pr-2 py-1.5 mr-2 sm:pr-3 sm:py-2 sm:mr-3 text-center border-r-[1px] border-solid leading-none font-normal" datetime={dateFormat(date, "yyyy-MM-dd")} aria-hidden="true">
                 <span class="block mb-1 text-xs-fit sm:text-sm-fit">{blogDate.year}</span>
                 <span class="block text-sm-fit sm:text-2xl-fit">{blogDate.date}</span>
               </time>
             </div>
-            <ul
-              class="mt-4 mb-8 flex flex-wrap items-center space-x-3 text-text"
-            >
-              <li class="mr-5 flex items-center flex-wrap font-medium">
-                <BiTime className="mr-2 h-5 w-5 text-gray-600" />
+            <div class="mb-8 items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
+              <div class="items-center border border-solid inline-flex text-sm gap-x-1 px-1.5 py-0.5">
+                <BiInfoCircle />
+                <span>広告</span>
+              </div>
+              <div class="items-center text-sm flex flex-wrap gap-x-2">
+                <BiFolder className="text-primary"/>
+                {categories.map((category: string, i: number) => (
+                  <a
+                    href={`/categories/${slugify(category)}`}
+                    class="bg-primary text-white leaping-none rounded-sm p-1 text-xs-fit hover:opacity-75"
+                  >
+                    {humanize(category)}
+                  </a>
+                ))}
+              </div>
+              <time datetime={dateFormat(date, "yyyy-MM-dd")} class="items-center text-sm flex flex-wrap gap-x-1">
+                <BiRevision />
                 <span class="text-sm">{dateFormat(date)}</>
-              </li>
-              <li class="mr-5 flex items-center flex-wrap">
-                <BiFolder className="mr-2 h-[18px] w-[18px] text-gray-600" />
-                <>
-                  <ul>
-                    {categories.map((category: string, i: number) => (
-                      <li class="inline-block">
-                        <a
-                          href={`/categories/${slugify(category)}`}
-                          class="mr-2 rounded-md border-solid border border-gray-600 hover:text-primary hover:border-primary text-xs font-medium px-1 py-0.5"
-                        >
-                          {humanize(category)}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              </li>
-            </ul>
+              </time>
+            </div>
             {
               image && (
                 <Image
