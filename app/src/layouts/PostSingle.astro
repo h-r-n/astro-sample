@@ -19,7 +19,7 @@ const blogDate = dateBlogFormat(date);
           <article>
             <div class="flex items-center flex-row-reverse">
               <h1 set:html={markdownify(title)} class="w-full leading-[1.4rem] text-lg sm:text-2xl" />
-              <time class="pr-2 py-1.5 mr-2 sm:pr-3 sm:py-2 sm:mr-3 text-center border-r-[1px] border-solid leading-none font-normal" datetime="2024-12-30" aria-hidden="true">
+              <time class="pr-2 py-1.5 mr-2 sm:pr-3 sm:py-2 sm:mr-3 text-center border-r-[1px] border-solid leading-none font-normal" datetime={dateFormat(date, "yyyy-MM-dd")} aria-hidden="true">
                 <span class="block mb-1 text-xs-fit sm:text-sm-fit">{blogDate.year}</span>
                 <span class="block text-sm-fit sm:text-2xl-fit">{blogDate.date}</span>
               </time>
