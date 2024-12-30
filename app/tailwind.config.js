@@ -71,6 +71,12 @@ module.exports = {
         h4: h4 + "rem", // 25px
         h5: h5 + "rem", // 1.25rem(20px)
         h6: h6 + "rem", // 1rem(16px)
+        'xs-fit': ['12px', '12px'],
+        'sm-fit': ['14px', '14px'],
+        'base-fit': ['16px', '16px'],
+        'lg-fit': ['18px', '18px'],
+        'xl-fit': ['20px', '20px'],
+        '2xl-fit': ['24px', '24px'],
       },
       fontFamily: {
         primary: ["var(--font-primary)", fontPrimaryType],

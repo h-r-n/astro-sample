@@ -1,22 +1,29 @@
 ---
 import { Image } from "astro:assets";
 import { BiTime, BiFolder, BiSolidFolder, BiSolidPurchaseTag } from "react-icons/bi";
-import dateFormat from "@/lib/utils/dateFormat";
+import { dateFormat, dateBlogFormat } from "@/lib/utils/dateFormat";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import type { PostData } from "@/types";
 
 const { post } = Astro.props;
 const { Content } = await post.render();
 const { title, categories, image, date, tags }: PostData = post.data;
+const blogDate = dateBlogFormat(date);
 ---
 
 <section class="section">
   <div class="container">
     <div class="row">
       <div class="mx-auto">
-        <div class="rounded-xl py-6 px-4 lg:py-12 lg:px-9 shadow md:p-[60px]">
+        <div class="rounded-xl p-2.5 lg:p-8 shadow md:p-[60px]">
           <article>
-            <h1 set:html={markdownify(title)} class="h2" />
+            <div class="flex items-center flex-row-reverse">
+              <h1 set:html={markdownify(title)} class="w-full leading-[1.4rem] text-lg sm:text-2xl" />
+              <time class="pr-2 py-1.5 mr-2 sm:pr-3 sm:py-2 sm:mr-3 text-center border-r-[1px] border-solid leading-none font-normal" datetime="2024-12-30" aria-hidden="true">
+                <span class="block mb-1 text-xs-fit sm:text-sm-fit">{blogDate.year}</span>
+                <span class="block text-sm-fit sm:text-2xl-fit">{blogDate.date}</span>
+              </time>
+            </div>
             <ul
               class="mt-4 mb-8 flex flex-wrap items-center space-x-3 text-text"
             >
