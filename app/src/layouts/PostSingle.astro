@@ -8,7 +8,6 @@ import type { PostData } from "@/types";
 const { post } = Astro.props;
 const { Content } = await post.render();
 const { title, categories, image, date, tags }: PostData = post.data;
-console.log(tags)
 ---
 
 <section class="section">
