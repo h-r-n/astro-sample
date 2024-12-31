@@ -1,5 +1,5 @@
 ---
-title: "My awesome blog post"
+title: "post4 の投稿のタイトル"
 image: "/images/post/post-1.jpg"
 authors: ["Mark Dinn"]
 date: 2019-11-07T05:00:00Z
