@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { BiRevision, BiFolder, BiSolidFolder, BiSolidPurchaseTag, BiInfoCircle } from "react-icons/bi";
+import { BiRevision, BiSolidFolder, BiSolidPurchaseTag, BiInfoCircle } from "react-icons/bi";
 import { dateFormat, dateBlogFormat } from "@/lib/utils/dateFormat";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import type { PostData } from "@/types";
@@ -15,7 +15,7 @@ const blogDate = dateBlogFormat(date);
   <div class="container">
     <div class="row">
       <div class="mx-auto">
-        <div class="rounded-xl p-2.5 lg:p-8 shadow md:p-[60px]">
+        <div class="rounded-xl p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
           <article>
             <div class="flex items-center flex-row-reverse mb-2.5">
               <h1 set:html={markdownify(title)} class="w-full leading-[1.4rem] text-lg sm:text-2xl" />
@@ -30,7 +30,7 @@ const blogDate = dateBlogFormat(date);
                 <span>広告</span>
               </div>
               <div class="items-center text-sm flex flex-wrap gap-x-2">
-                <BiFolder className="text-primary"/>
+                <BiSolidFolder className="text-primary"/>
                 {categories.map((category: string, i: number) => (
                   <a
                     href={`/categories/${slugify(category)}`}
@@ -42,7 +42,7 @@ const blogDate = dateBlogFormat(date);
               </div>
               <time datetime={dateFormat(date, "yyyy-MM-dd")} class="items-center text-sm flex flex-wrap gap-x-1">
                 <BiRevision />
-                <span class="text-sm">{dateFormat(date)}</>
+                <span class="text-xs">{dateFormat(date)}</>
               </time>
             </div>
             {
@@ -52,7 +52,7 @@ const blogDate = dateBlogFormat(date);
                   height={500}
                   width={1000}
                   alt={title}
-                  class="rounded-lg"
+                  class="rounded-lg mb-8"
                 />
               )
             }
