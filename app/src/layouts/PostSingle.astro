@@ -4,6 +4,9 @@ import { BiRevision, BiSolidFolder, BiSolidPurchaseTag, BiInfoCircle } from "rea
 import { dateFormat, dateBlogFormat } from "@/lib/utils/dateFormat";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import type { PostData } from "@/types";
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import AroundPost from "./components/AroundPost.astro";
 
 const { post } = Astro.props;
 const { Content } = await post.render();
@@ -60,40 +63,32 @@ const blogDate = dateBlogFormat(date);
               <Content />
               <!-- <Markdown content={post.body} components={shortcodes} /> -->
             </div>
-            <li class="mb-1 flex items-center flex-wrap">
-              <BiSolidFolder className="mr-2 h-[18px] w-[18px] text-gray-600" />
-              <>
-                <ul>
-                  {categories.map((category: string, i: number) => (
-                    <li class="inline-block">
-                      <a
-                        href={`/categories/${slugify(category)}`}
-                        class="mr-2 rounded-md border-solid border border-gray-600 hover:text-primary hover:border-primary text-xs font-medium px-1 py-0.5"
-                      >
-                        {humanize(category)}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            </li>
-            <li class="flex items-center flex-wrap">
-              <BiSolidPurchaseTag className="mr-2 h-[18px] w-[18px] text-gray-600" />
-              <>
-                <ul>
-                  {tags.map((tag: string, i: number) => (
-                    <li class="inline-block">
-                      <a
-                        href={`/tags/${slugify(tag)}`}
-                        class="mr-3 hover:text-primary hover:border-primary text-sm font-medium"
-                      >
-                        #{humanize(tag)}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            </li>
+            <!-- カテゴリとタグの下部表示 -->
+            <div class="mb-8 items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
+              <div class="items-center text-sm flex flex-wrap gap-x-2">
+                <BiSolidFolder className="text-primary"/>
+                {categories.map((category: string, i: number) => (
+                  <a
+                    href={`/categories/${slugify(category)}`}
+                    class="bg-primary text-white leaping-none rounded-sm p-1 text-xs-fit hover:opacity-75"
+                  >
+                    {humanize(category)}
+                  </a>
+                ))}
+              </div>
+              <div class="items-center text-sm flex flex-wrap gap-x-2">
+                <BiSolidPurchaseTag className="text-primary"/>
+                {tags.map((tag: string, i: number) => (
+                  <a
+                    href={`/tags/${slugify(tag)}`}
+                    class="bg-white text-primary border-primary p-1 border rounded-sm text-xs-fit hover:opacity-75"
+                  >
+                    # {humanize(tag)}
+                  </a>
+                ))}
+              </div>
+            </div>
+            <AroundPost post={post} />
           </article>
         </div>
       </div>

@@ -1,0 +1,50 @@
+---
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+
+const { post } = Astro.props;
+const posts = await getSinglePage("posts");
+const sortPostByDate = sortByDate(posts);
+
+const currentPostIndex = sortPostByDate.findIndex(
+  (postItem) => postItem.data.title === post.data.title
+);
+let prevPost, nextPost
+if (sortPostByDate[currentPostIndex + 1]) {
+  prevPost = sortPostByDate[currentPostIndex + 1];
+}
+if (sortPostByDate[currentPostIndex - 1]) {
+  nextPost = sortPostByDate[currentPostIndex - 1];
+}
+---
+<ul class="items-stretch flex justify-between mb-8">
+  <li class="w-[49%]">
+    {
+      prevPost && (
+        <a
+          class="relative flex items-center w-full hover:opacity-75"
+          href={'/' + prevPost.collection + '/' + prevPost.slug}
+          title={prevPost.data.title}
+        >
+          <BiChevronLeft className="absolute text-white" />
+          <span class="px-4 py-3 text-sm border-l-[16px] border-primary">{prevPost.data.title}</span>
+        </a>
+      )
+    }
+  </li>
+  <li class="w-[49%]">
+    {
+      nextPost && (
+        <a
+          class="relative flex items-center justify-end hover:opacity-75"
+          href={'/' + nextPost.collection + '/' + nextPost.slug}
+          title={nextPost.data.title}
+        >
+          <span class="px-4 py-3 text-sm border-r-[16px] border-primary">{nextPost.data.title}</span>
+          <BiChevronRight className="absolute text-white right-0" />
+        </a>
+      )
+    }
+  </li>
+</ul>
