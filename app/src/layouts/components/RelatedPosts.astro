@@ -1,0 +1,20 @@
+---
+import { getSinglePage } from "@/lib/contentParser.astro";
+import { sortByDate } from "@/lib/utils/sortFunctions";
+import RelatedPost from "./RelatedPost.astro";
+import similerItems from "@/lib/utils/similarItems";
+const { post } = Astro.props;
+
+const posts = await getSinglePage("posts");
+const sortPostByDate = sortByDate(posts);
+
+const relatedPosts = similerItems(post, sortPostByDate, post.slug);
+---
+
+<ul class="row sm:gx-3 gx-2">
+  {
+    relatedPosts.slice(0, 5).map((post) => (
+      <RelatedPost post={post} />
+    ))
+  }
+</ul>
