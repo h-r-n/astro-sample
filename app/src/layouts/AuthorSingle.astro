@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { markdownify } from "@/lib/utils/textConverter";
-import Post from "./partials/Post.astro";
+import Post from "./components/Post.astro";
 
 const { author } = Astro.props;
 const { title, image } = author.data;
