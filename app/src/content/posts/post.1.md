@@ -1,11 +1,11 @@
 ---
-title: "post1 の投稿のタイトル"
+title: "CategoryはParkとMovieでTagはDisneyLandとDisney+の投稿"
 image: "/images/post/post-3.jpg"
 authors: ["John Doe"]
 date: 2019-11-07T05:00:00Z
 description: "This is meta description"
 categories: ["Park", "Movie"]
-tags: ["DisneyLand", "DisneySea", "Disney+"]
+tags: ["DisneyLand", "Disney+"]
 type: "post"
 ---
 

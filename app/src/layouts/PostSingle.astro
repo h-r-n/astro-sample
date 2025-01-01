@@ -4,9 +4,8 @@ import { BiRevision, BiSolidFolder, BiSolidPurchaseTag, BiInfoCircle } from "rea
 import { dateFormat, dateBlogFormat } from "@/lib/utils/dateFormat";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import type { PostData } from "@/types";
-import { getSinglePage } from "@/lib/contentParser.astro";
-import { sortByDate } from "@/lib/utils/sortFunctions";
 import AroundPost from "./components/AroundPost.astro";
+import RelatedPosts from "./components/RelatedPosts.astro";
 
 const { post } = Astro.props;
 const { Content } = await post.render();
@@ -89,6 +88,13 @@ const blogDate = dateBlogFormat(date);
               </div>
             </div>
             <AroundPost post={post} />
+            <!-- 関連する記事 -->
+            <div>
+              <div class="mb-6 sm:mb-7 text-base sm:text-xl font-bold border-l-8 border-primary border-double py-[0.3em] px-[0.5em]">
+                関連記事
+              </div>
+              <RelatedPosts post={post} />
+            </div>
           </article>
         </div>
       </div>
