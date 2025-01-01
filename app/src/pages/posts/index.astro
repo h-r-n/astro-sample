@@ -1,8 +1,9 @@
 ---
+import Posts from "@/components/Posts.astro";
 import { settings } from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
-import Post from "@/layouts/partials/Post.astro";
+import Post from "@/layouts/components/Post.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 const posts = await getSinglePage("posts");
@@ -12,17 +13,11 @@ const totalPages = Math.ceil(posts.length / settings.pagination);
 
 <Base>
   <!-- Blogs -->
-  <div class="section">
-    <div class="container">
-      <div class="row gy-5 gx-4">
-        <h1 class="text-3xl py-4">ブログ一覧</h1>
-        {
-          sortPostByDate.slice(0, settings.pagination).map((post) => (
-            <Post post={post} />
-          ))
-        }
-        <Pagination section={"posts"} currentPage={1} totalPages={totalPages} />
-      </div>
+  <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
+    <div class="container row">
+      <h1 class="index-title">ブログ一覧</h1>
+      <Posts posts={sortPostByDate} />
+      <Pagination section={"posts"} currentPage={1} totalPages={totalPages} />
     </div>
   </div>
   <!-- ./End Blogs -->
