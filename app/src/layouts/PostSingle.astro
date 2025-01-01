@@ -15,88 +15,86 @@ const blogDate = dateBlogFormat(date);
 
 <section class="section">
   <div class="container">
-    <div class="row">
-      <div class="mx-auto">
-        <div class="rounded-xl p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
-          <article>
-            <div class="flex items-center flex-row-reverse mb-2.5">
-              <h1 set:html={markdownify(title)} class="w-full leading-[1.4rem] text-lg sm:text-2xl" />
-              <time class="pr-2 py-1.5 mr-2 sm:pr-3 sm:py-2 sm:mr-3 text-center border-r-[1px] border-solid leading-none font-normal" datetime={dateFormat(date, "yyyy-MM-dd")} aria-hidden="true">
-                <span class="block mb-1 text-xs-fit sm:text-sm-fit">{blogDate.year}</span>
-                <span class="block text-sm-fit sm:text-2xl-fit">{blogDate.date}</span>
-              </time>
+    <div>
+      <div class="rounded-xl p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
+        <article>
+          <div class="flex items-center flex-row-reverse mb-2.5">
+            <h1 set:html={markdownify(title)} class="w-full leading-[1.4rem] text-lg sm:text-2xl" />
+            <time class="pr-2 py-1.5 mr-2 sm:pr-3 sm:py-2 sm:mr-3 text-center border-r-[1px] border-solid leading-none font-normal" datetime={dateFormat(date, "yyyy-MM-dd")} aria-hidden="true">
+              <span class="block mb-1 text-xs-fit sm:text-sm-fit">{blogDate.year}</span>
+              <span class="block text-sm-fit sm:text-2xl-fit">{blogDate.date}</span>
+            </time>
+          </div>
+          <div class="mb-8 items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
+            <div class="items-center border border-solid inline-flex text-sm gap-x-1 px-1.5 py-0.5">
+              <BiInfoCircle />
+              <span>広告</span>
             </div>
-            <div class="mb-8 items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
-              <div class="items-center border border-solid inline-flex text-sm gap-x-1 px-1.5 py-0.5">
-                <BiInfoCircle />
-                <span>広告</span>
-              </div>
-              <div class="items-center text-sm flex flex-wrap gap-x-2">
-                <BiSolidFolder className="text-primary"/>
-                {categories.map((category: string, i: number) => (
-                  <a
-                    href={`/categories/${slugify(category)}`}
-                    class="bg-primary text-white leaping-none rounded-sm p-1 text-xs-fit hover:opacity-75"
-                  >
-                    {humanize(category)}
-                  </a>
-                ))}
-              </div>
-              <time datetime={dateFormat(date, "yyyy-MM-dd")} class="items-center text-sm flex flex-wrap gap-x-1">
-                <BiRevision />
-                <span class="text-xs">{dateFormat(date)}</>
-              </time>
+            <div class="items-center text-sm flex flex-wrap gap-x-2">
+              <BiSolidFolder className="text-primary"/>
+              {categories.map((category: string, i: number) => (
+                <a
+                  href={`/categories/${slugify(category)}`}
+                  class="bg-primary text-white leaping-none rounded-sm p-1 text-xs-fit hover:opacity-75"
+                >
+                  {humanize(category)}
+                </a>
+              ))}
             </div>
-            {
-              image && (
-                <Image
-                  src={image}
-                  height={500}
-                  width={1000}
-                  alt={title}
-                  class="rounded-lg mb-8"
-                />
-              )
-            }
-            <div class="content mb-16 text-left">
-              <Content />
-              <!-- <Markdown content={post.body} components={shortcodes} /> -->
+            <time datetime={dateFormat(date, "yyyy-MM-dd")} class="items-center text-sm flex flex-wrap gap-x-1">
+              <BiRevision />
+              <span class="text-xs">{dateFormat(date)}</>
+            </time>
+          </div>
+          {
+            image && (
+              <Image
+                src={image}
+                height={500}
+                width={1000}
+                alt={title}
+                class="rounded-lg mb-8"
+              />
+            )
+          }
+          <div class="content mb-16 text-left">
+            <Content />
+            <!-- <Markdown content={post.body} components={shortcodes} /> -->
+          </div>
+          <!-- カテゴリとタグの下部表示 -->
+          <div class="mb-8 items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
+            <div class="items-center text-sm flex flex-wrap gap-x-2">
+              <BiSolidFolder className="text-primary"/>
+              {categories.map((category: string, i: number) => (
+                <a
+                  href={`/categories/${slugify(category)}`}
+                  class="bg-primary text-white leaping-none rounded-sm p-1 text-xs-fit hover:opacity-75"
+                >
+                  {humanize(category)}
+                </a>
+              ))}
             </div>
-            <!-- カテゴリとタグの下部表示 -->
-            <div class="mb-8 items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
-              <div class="items-center text-sm flex flex-wrap gap-x-2">
-                <BiSolidFolder className="text-primary"/>
-                {categories.map((category: string, i: number) => (
-                  <a
-                    href={`/categories/${slugify(category)}`}
-                    class="bg-primary text-white leaping-none rounded-sm p-1 text-xs-fit hover:opacity-75"
-                  >
-                    {humanize(category)}
-                  </a>
-                ))}
-              </div>
-              <div class="items-center text-sm flex flex-wrap gap-x-2">
-                <BiSolidPurchaseTag className="text-primary"/>
-                {tags.map((tag: string, i: number) => (
-                  <a
-                    href={`/tags/${slugify(tag)}`}
-                    class="bg-white text-primary border-primary p-1 border rounded-sm text-xs-fit hover:opacity-75"
-                  >
-                    # {humanize(tag)}
-                  </a>
-                ))}
-              </div>
+            <div class="items-center text-sm flex flex-wrap gap-x-2">
+              <BiSolidPurchaseTag className="text-primary"/>
+              {tags.map((tag: string, i: number) => (
+                <a
+                  href={`/tags/${slugify(tag)}`}
+                  class="bg-white text-primary border-primary p-1 border rounded-sm text-xs-fit hover:opacity-75"
+                >
+                  # {humanize(tag)}
+                </a>
+              ))}
             </div>
-            <AroundPost post={post} />
-            <!-- 関連する記事 -->
-            <div>
-              <div class="mb-6 sm:mb-7 text-base sm:text-xl font-bold border-l-8 border-primary border-double py-[0.3em] px-[0.5em]">
-                関連記事
-              </div>
-              <RelatedPosts post={post} />
+          </div>
+          <AroundPost post={post} />
+          <!-- 関連する記事 -->
+          <div>
+            <div class="mb-6 sm:mb-7 text-base sm:text-xl font-bold border-l-8 border-primary border-double py-[0.3em] px-[0.5em]">
+              関連記事
             </div>
-          </article>
-        </div>
+            <RelatedPosts post={post} />
+          </div>
+        </article>
       </div>
     </div>
   </div>

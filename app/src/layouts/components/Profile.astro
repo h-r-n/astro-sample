@@ -1,0 +1,17 @@
+---
+import Social from "./Social.astro";
+import social from "@/config/social.json";
+---
+
+<div class="rounded-xl p-3 mb-6 shadow bg-white">
+  <div class="text-center mb-2">
+    <img src="https://dub.sh/TdSBP0D" alt="profile-picture" class="inline-block object-cover object-center w-28 h-28 m-2 rounded-xl" />
+  </div>
+  <div class="text-center mb-3">
+    <div class="text-base-fit mb-3">nanashi</div>
+    <p class="text-sm text-left px-2">ディズニーパークやディズニー映画が大好きなエンジニア。<br><br>自作ブログを通してディズニーのパーク情報や映画情報を発信しております！</p>
+  </div>
+  <div class="w-full rounded flex items-center justify-center gap-1">
+    <Social source={social} className="social-icons sm" />
+  </div>
+</div>
