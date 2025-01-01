@@ -1,0 +1,14 @@
+---
+import { settings } from "@/config/config.json";
+import Post from "./Post.astro";
+
+const { posts } = Astro.props;
+---
+
+<ul class="row sm:gx-3 gx-2 mb-4">
+  {
+    posts.slice(0, settings.pagination).map((post) => (
+      <Post post={post} />
+    ))
+  }
+</ul>
