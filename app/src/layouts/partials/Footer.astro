@@ -9,11 +9,11 @@ import { markdownify } from "@/lib/utils/textConverter";
 
 <footer class="mt-20 bg-theme-light py-6">
   <div class="container text-center">
-    <div class="row items-center w-full">
-      <div class="lg:col-4">
+    <div class="sm:row items-center mb-8">
+      <div class="mb-8 sm:mb-0 sm:col-4 pr-0">
         <Logo />
       </div>
-      <div class="mt-8 lg:col-4 lg:mt-0">
+      <div class="mb-8 sm:mb-0 sm:col-4 pr-0">
         {/* footer menu */}
         <ul class="space-x-4">
           {
@@ -21,7 +21,7 @@ import { markdownify } from "@/lib/utils/textConverter";
               <li class="inline-block">
                 <a
                   href={menu.url}
-                  class="text-[#343a40] hover:underline lg:p-4"
+                  class="text-[#343a40] hover:underline sm:p-4 text-xs sm:text-sm"
                 >
                   {menu.name}
                 </a>
@@ -30,14 +30,14 @@ import { markdownify } from "@/lib/utils/textConverter";
           }
         </ul>
       </div>
-      <div class="mt-8 lg:col-4 lg:mt-0">
+      <div class="mb-8 sm:mb-0 sm:col-4 pr-0">
         <Social source={social} className="social-icons" />
       </div>
     </div>
     {/* social icons */}
     {/* copyright */}
     <p
-      class="footer-copyright-text mt-10"
+      class="text-xs sm:text-sm"
       set:html={markdownify(config.params.copyright)}
     />
   </div>

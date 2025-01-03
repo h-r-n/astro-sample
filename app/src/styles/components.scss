@@ -170,15 +170,6 @@
   }
 }
 
-//footer
-.footer {
-  &-copyright-text {
-    a {
-      @apply text-primary hover:text-primary hover:underline;
-    }
-  }
-}
-
 // toc
 .toc {
   @apply [counter-reset:toc];
