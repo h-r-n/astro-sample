@@ -38,7 +38,7 @@ const tags = await getTaxonomy(blog_folder, "tags");
         {tags.map((tag) => (
           <a
             href={`/tags/${tag}`}
-            class="bg-white text-primary border-primary p-1 border rounded-sm text-xs-fit hover:opacity-75"
+            class="bg-white text-primary border-primary p-1 border text-xs-fit hover:opacity-75"
           >
             # {humanize(tag || "")}
           </a>

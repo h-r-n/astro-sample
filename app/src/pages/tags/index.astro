@@ -10,23 +10,19 @@ const tags = await getTaxonomy(blog_folder, "tags");
 ---
 
 <Base title={"tags"}>
-  <section class="section">
-    <div class="container text-center">
-      <h1 class="text-3xl mb-8">タグ</h1>
-      <ul class="space-x-4">
-        {
-          tags.map((tag) => (
-            <li class="inline-block">
-              <a
-                href={`/tags/${tag}`}
-                class="rounded-lg bg-theme-light px-4 py-2 text-dark transition hover:bg-primary hover:text-white"
-              >
-                &#8226; {humanize(tag || "")}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+  <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
+    <div class="container row">
+      <h1 class="index-title">タグ</h1>
+      <div class="items-center text-sm flex flex-wrap gap-3">
+        {tags.map((tag) => (
+          <a
+            href={`/tags/${tag}`}
+            class="bg-white text-primary border-primary p-1.5 border text-base-fit hover:opacity-75"
+          >
+            # {humanize(tag || "")}
+          </a>
+        ))}
+      </div>
     </div>
-  </section>
+  </div>
 </Base>
