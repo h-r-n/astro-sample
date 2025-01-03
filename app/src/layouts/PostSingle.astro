@@ -6,6 +6,7 @@ import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import type { PostData } from "@/types";
 import AroundPost from "./components/AroundPost.astro";
 import RelatedPosts from "./components/RelatedPosts.astro";
+import Toc from "./components/Toc.astro";
 
 const { post } = Astro.props;
 const { Content } = await post.render();
@@ -58,7 +59,9 @@ const blogDate = dateBlogFormat(date);
             )
           }
           <div class="content mb-16 text-left">
-            <Content />
+            <Content components={{
+              Toc,
+            }} />
             <!-- <Markdown content={post.body} components={shortcodes} /> -->
           </div>
           <!-- カテゴリとタグの下部表示 -->
