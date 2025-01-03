@@ -1,14 +1,18 @@
 ---
 import { AstroFont } from "astro-font";
+import { Image } from "astro:assets";
+import { ViewTransitions } from "astro:transitions";
+import { getEntryBySlug } from "astro:content";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import config from "@/config/config.json";
 import theme from "@/config/theme.json";
-import { plainify } from "@/lib/utils/textConverter";
+import { plainify, markdownify } from "@/lib/utils/textConverter";
 import Footer from "@/partials/Footer.astro";
 import Header from "@/partials/Header.astro";
 import SideBar from "@/partials/SideBar.astro";
 import "@/styles/main.scss";
-import { ViewTransitions } from "astro:transitions";
+const homepage = await getEntryBySlug("homepage", "index");
+const { banner } = homepage.data;
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -39,6 +43,9 @@ export interface Props {
 // distructure frontmatters
 const { title, meta_title, description, image, noindex, canonical } =
   Astro.props;
+
+const currentPath = new URL(Astro.request.url).pathname;
+const isHome = currentPath === '/';
 ---
 
 <!doctype html>
@@ -173,6 +180,27 @@ const { title, meta_title, description, image, noindex, canonical } =
   <body>
     <TwSizeIndicator />
     <Header />
+    {isHome && (
+      <section
+        class="banner mb-8"
+        style="background-image: url('/images/banner/banner-bg.svg')"
+      >
+        <div class="container">
+          <div class="sm:col-6">
+            {banner?.title && (
+              <h1 set:html={markdownify(banner?.title)} class="h2 mb-8" />
+            )}
+          </div>
+          <div class="banner-illustration">
+            {
+              banner?.image && (
+                <Image src={banner?.image} width={768} height={385} alt="" />
+              )
+            }
+          </div>
+        </div>
+      </section>
+    )}
     <div class="px-2 sm:px-8 grid grid-cols-4 gap-6">
       <main id="main-content" class="col-span-4 lg:col-span-3">
         <slot />

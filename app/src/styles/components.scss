@@ -155,7 +155,7 @@
 //banner
 .banner {
   // @apply relative bg-cover bg-center bg-no-repeat py-[100px] lg:pt-[230px] lg:pb-28;
-  @apply relative bg-cover bg-center bg-no-repeat py-[100px] lg:pb-28;
+  @apply relative bg-cover bg-center bg-no-repeat py-[100px] sm:pb-28 px-2 sm:px-8;
 
   &-illustration {
     @apply lg:absolute lg:right-8 lg:bottom-0;
