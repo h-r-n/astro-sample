@@ -1,0 +1,5 @@
+@use "astro-breadcrumbs/breadcrumbs.scss" with (
+  /// Your config goes here
+  $size-font: 13px,
+  $truncated: true
+);
