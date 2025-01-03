@@ -7,13 +7,13 @@ import Logo from "@/layouts/components/Logo.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 ---
 
-<footer class="mt-20 bg-theme-light py-6">
+<footer class="mt-10 bg-theme-light py-6">
   <div class="container text-center">
-    <div class="sm:row items-center mb-8">
-      <div class="mb-8 sm:mb-0 sm:col-4 pr-0">
+    <div class="sm:flex items-center mb-8">
+      <div class="mb-8 sm:mb-0 sm:col-4">
         <Logo />
       </div>
-      <div class="mb-8 sm:mb-0 sm:col-4 pr-0">
+      <div class="mb-8 sm:mb-0 sm:col-4">
         {/* footer menu */}
         <ul class="space-x-4">
           {
@@ -30,7 +30,7 @@ import { markdownify } from "@/lib/utils/textConverter";
           }
         </ul>
       </div>
-      <div class="mb-8 sm:mb-0 sm:col-4 pr-0">
+      <div class="mb-8 sm:mb-0 sm:col-4">
         <Social source={social} className="social-icons" />
       </div>
     </div>
