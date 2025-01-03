@@ -116,7 +116,7 @@
   @apply prose-h2:text-h2-prose-sm md:prose-h2:text-h2-prose prose-h2:mb-5 md:prose-h2:mb-8 prose-h2:text-white prose-h2:px-4 prose-h2:py-2 prose-h2:bg-primary prose-h2:shadow-[0_0_0_10px_rgb(118,156,191)] prose-h2:border-t-2 prose-h2:border-b-2 prose-h2:border-white prose-h2:border-dashed;
   @apply prose-h3:text-h3-prose-sm md:prose-h3:text-h3-prose prose-h3:mb-5 md:prose-h3:mb-8 prose-h3:p-[0.3em] prose-h3:p-[0.3em] prose-h3:border-b-2 prose-h3:border-solid prose-h3:border-primary prose-h3:first-letter:text-[1.5em] prose-h3:first-letter:text-primary;
   @apply prose-hr:border-border;
-  @apply prose-p:text-base prose-p:text-text;
+  @apply prose-p:sm:text-base prose-p:text-text prose-p:text-sm;
   @apply prose-blockquote:border-primary prose-blockquote:bg-theme-light prose-blockquote:py-1 prose-blockquote:px-4;
   @apply prose-code:px-1 prose-code:text-primary;
   @apply prose-pre:rounded-none;
@@ -128,7 +128,7 @@
   @apply prose-ul:bg-[#f1f8ff] prose-ul:shadow-[0_0_0_10px_rgb(241,248,255)] prose-ul:border-2 prose-ul:border-dashed prose-ul:border-primary prose-ul:rounded-s-lg prose-ul:mx-2.5 prose-ul:my-8 md:prose-ul:my-5 prose-ul:py-2 prose-ul:pr-2 prose-ul:pl-8;
   @apply prose-ol:bg-[#f1f8ff] prose-ol:shadow-[0_0_0_10px_rgb(241,248,255)] prose-ol:border-2 prose-ol:border-dashed prose-ol:border-primary prose-ol:rounded-s-lg prose-ol:mx-2.5 prose-ol:my-8 md:prose-ol:my-5 prose-ol:py-2 prose-ol:pr-2 prose-ol:pl-8;
   @apply prose-td:px-3 prose-td:py-4;
-  @apply prose-li:py-2 prose-li:px-0 prose-li:leading-normal prose-li:marker:text-dark;
+  @apply prose-li:py-2 prose-li:px-0 prose-li:leading-normal prose-li:marker:text-dark prose-li:text-sm prose-li:sm:text-base;
   
   // デフォルトの表記はこちら
   // @apply prose max-w-none;
@@ -177,4 +177,15 @@
       @apply text-primary hover:text-primary hover:underline;
     }
   }
+}
+
+// toc
+.toc {
+  @apply [counter-reset:toc];
+}
+.toc-item-h2 {
+  @apply relative pl-5 mb-1 text-[15px] sm:text-base before:absolute [counter-increment:toc] before:[content:counters(toc,"-")"."] before:left-0 before:top-1 before:text-sm;
+}
+.toc-item-h3 {
+  @apply relative pl-7 mb-1 text-sm sm:text-[15px] before:absolute [counter-increment:toc] before:[content:counters(toc,"-")"."] before:left-0 before:top-[0.15rem] before:text-xs;
 }

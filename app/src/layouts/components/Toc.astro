@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from 'astro'
+import { BiListUl } from "react-icons/bi";
 import TocItem from './TocItem.astro'
 
 interface Props {
@@ -33,10 +34,14 @@ function buildHierarchy(headings: MarkdownHeading[]) {
 const headings = buildHierarchy(Astro.props.headings ?? [])
 ---
 
-<ol>
-  {
-    headings.map((heading) => {
+<div class="border border-primary">
+  <div class="bg-primary text-white p-2 text-center text:base sm:text-lg flex items-center justify-center">
+    <BiListUl className="mr-1 sm:text-2xl text-lg" />
+    目次
+  </div>
+  <ul class="not-prose p-4 toc">
+    {headings.map((heading) => {
       return <TocItem heading={heading} />
-    })
-  }
-</ol>
+    })}
+  </ul>
+</div>
