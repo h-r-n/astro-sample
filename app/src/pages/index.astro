@@ -1,58 +1,21 @@
 ---
-import { settings } from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import Pagination from "@/layouts/components/Pagination.astro";
-import Post from "@/layouts/components/Post.astro";
+import Posts from "@/components/Posts.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
-import { markdownify } from "@/lib/utils/textConverter";
-import { Image } from "astro:assets";
-import { getEntryBySlug } from "astro:content";
-const homepage = await getEntryBySlug("homepage", "index");
-const { banner } = homepage.data;
 const posts = await getSinglePage("posts");
 const sortPostByDate = sortByDate(posts);
-const totalPages = Math.ceil(posts.length / settings.pagination);
 ---
 
 <Base>
-  <!-- Banner -->
-  <section
-    class="banner"
-    style="background-image: url('/images/banner/banner-bg.svg')"
-  >
-    <div class="container">
-      <div class="row">
-        <div class="lg:col-6">
-          {
-            banner?.title && (
-              <h1 set:html={markdownify(banner?.title)} class="h2 mb-8" />
-            )
-          }
-        </div>
-      </div>
-      <div class="banner-illustration">
-        {
-          banner?.image && (
-            <Image src={banner?.image} width={768} height={385} alt="" />
-          )
-        }
-      </div>
-    </div>
-  </section>
-  <!-- ./End Banner -->
-
   <!-- Blogs -->
-  <div class="section">
-    <div class="container">
-      <div class="row gy-5 gx-4">
-        {
-          sortPostByDate.slice(0, settings.pagination).map((post) => (
-            <Post post={post} />
-          ))
-        }
-        <Pagination currentPage={1} totalPages={totalPages} />
-      </div>
+  <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
+    <h1 class="index-title">新着記事</h1>
+    <div class="container row">
+      <Posts posts={sortPostByDate} />
+      <a href="/posts" class="text-center mb-6 border border-text px-8 py-2 hover:text-primary hover:border-primary">
+        もっと見る
+      </a>
     </div>
   </div>
   <!-- ./End Blogs -->
