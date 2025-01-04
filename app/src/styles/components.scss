@@ -123,7 +123,8 @@
   @apply prose-pre:rounded-none;
   @apply prose-strong:text-dark;
   @apply prose-a:text-primary prose-a:no-underline hover:prose-a:underline;
-  @apply prose-ul:border-2 prose-ul:border-solid prose-ul:border-primary prose-ul:list-disc prose-ul:my-5 prose-ul:py-[11px] prose-ul:pr-5 prose-ul:pl-9;
+  @apply prose-ul:border-2 prose-ul:border-solid prose-ul:border-primary prose-ul:my-5 prose-ul:py-[11px] prose-ul:pr-5 prose-ul:pl-9;
+  @apply prose-ol:border-2 prose-ol:border-solid prose-ol:border-primary prose-ol:my-5 prose-ol:py-[11px] prose-ol:pr-5 prose-ol:pl-9;
   @apply prose-li:mt-2.5 prose-li:text-sm prose-li:sm:text-base;
 
   @apply prose-table:overflow-hidden prose-table:border prose-table:border-border;
