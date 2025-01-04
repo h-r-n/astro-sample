@@ -66,7 +66,7 @@ export default function SearchBar({ searchList }: Props) {
     <div>
       <input
         className="form-input w-full mb-8 placeholder:text-light placeholder:text-sm"
-        placeholder="検索する"
+        placeholder="キーワードを入力して検索"
         type="text"
         name="search"
         value={inputVal}
