@@ -7,7 +7,7 @@ import Logo from "@/layouts/components/Logo.astro";
 import { markdownify } from "@/lib/utils/textConverter";
 ---
 
-<footer class="mt-10 bg-theme-light py-6">
+<footer class="footer">
   <div class="container text-center">
     <div class="sm:flex items-center mb-8">
       <div class="mb-8 sm:mb-0 sm:col-4">
@@ -21,7 +21,7 @@ import { markdownify } from "@/lib/utils/textConverter";
               <li class="inline-block">
                 <a
                   href={menu.url}
-                  class="text-[#343a40] hover:underline sm:p-4 text-xs sm:text-sm"
+                  class="text-white hover:underline sm:p-4 text-xs sm:text-sm"
                 >
                   {menu.name}
                 </a>
@@ -37,7 +37,7 @@ import { markdownify } from "@/lib/utils/textConverter";
     {/* social icons */}
     {/* copyright */}
     <p
-      class="text-xs sm:text-sm"
+      class="text-xs sm:text-sm text-white"
       set:html={markdownify(config.params.copyright)}
     />
   </div>

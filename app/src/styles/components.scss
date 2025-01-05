@@ -46,7 +46,7 @@
   li {
     @apply inline-block;
     a {
-      @apply block h-11 w-11 rounded-full border border-primary bg-body text-center text-primary transition-all duration-300 hover:bg-primary hover:text-body;
+      @apply block h-11 w-11 rounded-full border border-primary bg-body text-center text-primary transition-all duration-300 hover:opacity-75;
       svg {
         @apply m-auto h-11;
       }
