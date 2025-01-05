@@ -5,6 +5,7 @@ import Base from "@/layouts/Base.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
+import { PiArticleNyTimesLight } from "react-icons/pi";
 
 export async function getStaticPaths() {
   const posts = await getSinglePage(config.settings.blog_folder as any);
@@ -34,10 +35,15 @@ const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
   <!-- Blogs -->
   <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
     <div class="container row">
-      <h1 class="index-title">
-        ブログ
-        <small class="text-light italic ml-2">- blog -</small>
-      </h1>
+      <div class="text-center border-b-2 border-primary mb-12 px-0">
+        <div class="top-title-icon">
+          <PiArticleNyTimesLight />
+        </div>
+        <div class="pb-4">
+          <span class="top-title-sub">ブログ</span>
+          <h2 class="top-title">BLOG</h2>
+        </div>
+      </div>
       <Posts posts={currentPosts} />
       <Pagination section={"posts"} currentPage={currentPage} totalPages={totalPages} />
     </div>

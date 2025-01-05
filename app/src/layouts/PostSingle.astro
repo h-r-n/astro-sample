@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import { BiRevision, BiSolidFolder, BiSolidPurchaseTag, BiInfoCircle } from "react-icons/bi";
+import { BiRevision, BiSolidCategory, BiSolidPurchaseTag, BiInfoCircle } from "react-icons/bi";
 import { dateFormat, dateBlogFormat } from "@/lib/utils/dateFormat";
 import { humanize, markdownify, slugify } from "@/lib/utils/textConverter";
 import type { PostData } from "@/types";
@@ -32,11 +32,11 @@ const blogDate = dateBlogFormat(date);
               <span>広告</span>
             </div>
             <div class="items-center text-sm flex flex-wrap gap-x-2">
-              <BiSolidFolder className="text-primary"/>
+              <BiSolidCategory className="text-primary"/>
               {categories.map((category: string, i: number) => (
                 <a
                   href={`/categories/${slugify(category)}`}
-                  class="bg-primary text-white leaping-none rounded-sm p-1 text-xs-fit hover:opacity-75"
+                  class="bg-primary text-white leaping-none p-1 text-xs-fit hover:opacity-75"
                 >
                   {humanize(category)}
                 </a>
@@ -67,11 +67,11 @@ const blogDate = dateBlogFormat(date);
           <!-- カテゴリとタグの下部表示 -->
           <div class="mb-8 items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
             <div class="items-center text-sm flex flex-wrap gap-x-2">
-              <BiSolidFolder className="text-primary"/>
+              <BiSolidCategory className="text-primary"/>
               {categories.map((category: string, i: number) => (
                 <a
                   href={`/categories/${slugify(category)}`}
-                  class="bg-primary text-white leaping-none rounded-sm p-1 text-xs-fit hover:opacity-75"
+                  class="bg-primary text-white leaping-none p-1 text-xs-fit hover:opacity-75"
                 >
                   {humanize(category)}
                 </a>
@@ -82,7 +82,7 @@ const blogDate = dateBlogFormat(date);
               {tags.map((tag: string, i: number) => (
                 <a
                   href={`/tags/${slugify(tag)}`}
-                  class="bg-white text-primary border-primary p-1 border rounded-sm text-xs-fit hover:opacity-75"
+                  class="bg-white text-primary border-primary p-1 border text-xs-fit hover:opacity-75"
                 >
                   # {humanize(tag)}
                 </a>

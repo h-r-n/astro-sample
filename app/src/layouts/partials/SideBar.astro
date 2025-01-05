@@ -3,7 +3,7 @@ import Profile from "@/components/Profile.astro";
 import config from "@/config/config.json";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import { humanize } from "@/lib/utils/textConverter";
-import { BiSolidFolder, BiSolidPurchaseTag } from "react-icons/bi";
+import { BiSolidCategory } from "react-icons/bi";
 
 const { blog_folder } = config.settings;
 
@@ -24,7 +24,7 @@ const tags = await getTaxonomy(blog_folder, "tags");
                 href={`/categories/${category}`}
                 class="flex relative hover:bg-theme-light items-center align-middle"
               >
-                <BiSolidFolder className="h-[12px] w-[12px] ml-1 absolute" />
+                <BiSolidCategory className="h-[13px] w-[13px] ml-1 absolute" />
                 <span class="py-2.5 pr-2.5 pl-6 text-sm">{humanize(category || "")}</span>
               </a>
             </li>
