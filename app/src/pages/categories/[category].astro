@@ -7,7 +7,7 @@ import { getSinglePage } from "@/lib/contentParser.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import taxonomyFilter from "@/lib/utils/taxonomyFilter";
 import { humanize } from "@/lib/utils/textConverter";
-import { BiSolidCategory } from "react-icons/bi";
+import { BiCategory, BiSolidCategory } from "react-icons/bi";
 const { blog_folder, pagination } = config.settings;
 
 export async function getStaticPaths() {
@@ -33,7 +33,7 @@ const totalPages = Math.ceil(filterByTags.length / pagination);
     <div class="container row">
       <div class="text-center border-b-2 border-primary mb-12 px-0">
         <div class="top-title-icon">
-          <BiSolidCategory />
+          <BiCategory />
         </div>
         <div class="pb-4">
           <span class="top-title-sub">カテゴリー</span>

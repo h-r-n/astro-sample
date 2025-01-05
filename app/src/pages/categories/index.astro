@@ -3,7 +3,7 @@ import config from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import { getTaxonomy } from "@/lib/taxonomyParser.astro";
 import { humanize } from "@/lib/utils/textConverter";
-import { BiSolidCategory } from "react-icons/bi";
+import { BiCategory, BiSolidCategory } from "react-icons/bi";
 
 const { blog_folder } = config.settings;
 
@@ -15,7 +15,7 @@ const categories = await getTaxonomy(blog_folder, "categories");
     <div class="container row">
       <div class="text-center border-b-2 border-primary mb-12 px-0">
         <div class="top-title-icon">
-          <BiSolidCategory />
+          <BiCategory />
         </div>
         <div class="pb-4">
           <span class="top-title-sub">カテゴリー</span>
