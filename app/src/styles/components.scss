@@ -21,7 +21,7 @@
 // top title
 .top-title {
   &-icon {
-    @apply mb-2 flex justify-center items-center text-primary text-5xl;
+    @apply mb-2 flex justify-center items-center text-primary text-4xl sm:text-5xl;
     @apply before:bg-primary before:content-[''] before:grow before:h-0.5 before:mr-3;
     @apply after:bg-primary after:content-[''] after:grow after:h-0.5 after:ml-3;
   }
