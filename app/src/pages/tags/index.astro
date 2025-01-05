@@ -12,7 +12,10 @@ const tags = await getTaxonomy(blog_folder, "tags");
 <Base title={"tags"}>
   <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
     <div class="container row">
-      <h1 class="index-title">タグ</h1>
+      <h1 class="index-title">
+        タグ
+        <small class="text-light italic ml-2">- tag -</small>
+      </h1>      
       <div class="items-center text-sm flex flex-wrap gap-3">
         {tags.map((tag) => (
           <a

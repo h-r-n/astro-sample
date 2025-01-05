@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
-import config from "@/config/config.json";
 import { dateFormat } from "@/lib/utils/dateFormat";
-import { humanize, plainify, slugify } from "@/lib/utils/textConverter";
 import Fuse from "fuse.js";
 import { useRef, useState } from "react";
-const { summary_length } = config.settings;
+import { BiRevision } from "react-icons/bi";
 export type SearchItem = {
+  id: string;
   slug: string;
   data: any;
-  content: any;
 };
 
 interface Props {
@@ -65,10 +63,10 @@ export default function SearchBar({ searchList }: Props) {
   }, [inputVal]);
 
   return (
-    <div className="min-h-[45vh]">
+    <div>
       <input
-        className="form-input w-full"
-        placeholder="Search posts"
+        className="form-input w-full mb-8 placeholder:text-light placeholder:text-sm"
+        placeholder="キーワードを入力して検索"
         type="text"
         name="search"
         value={inputVal}
@@ -78,50 +76,35 @@ export default function SearchBar({ searchList }: Props) {
         ref={inputRef}
       />
 
-      <div className="row">
-        <div className="mx-auto px-0 lg:col-8">
-          {inputVal.length > 1 && (
-            <h2 className="mt-8 font-normal">
-              Found {searchResults?.length}
-              {searchResults?.length && searchResults?.length === 1
-                ? " result"
-                : " results"}{" "}
-              for <span className="text-primary">{inputVal}</span>
-            </h2>
-          )}
-          {searchResults?.length ? (
-            <div className="rounded py-12 px-9 shadow md:p-[60px]">
-              {searchResults?.map(({ item }) => (
-                <div
-                  className="card mb-12 border-b border-border pb-[30px]"
-                  key={item.slug}
+      <div>
+        {inputVal.length > 1 && (
+          <h2 className="text-lg mb-6">
+            <span className="text-primary">{inputVal}</span> に関する記事が {searchResults?.length} 件見つかりました
+          </h2>
+        )}
+        {searchResults?.length ? (
+          <ul className="row sm:gx-3 gx-2 mb-4">
+            {searchResults?.map(({ item }) => (
+              <li className="col-12 sm:col-6 mb-6 sm:mb-8">
+                <a
+                  href={`/posts/${item.slug}`}
+                  className="block hover:opacity-75"
                 >
-                  <h3 className="h4">
-                    <a
-                      href={`/posts/${item.slug}`}
-                      className="block font-normal text-primary hover:underline"
-                    >
-                      {item.data.title}
-                    </a>
-                  </h3>
-                  <p className="mt-2.5 text-lg text-text">
-                    {plainify(item.content?.slice(0, Number(summary_length)))}
-                  </p>
-                  <p className="mt-3 text-lg">
-                    Categories:{" "}
-                    {item.data.categories?.map(
-                      (category: string, index: number) => (
-                        <a key={index} href="#">
-                          {category}
-                        </a>
-                      ),
-                    )}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
+                  {item.data.image && (
+                    <img className="group-hover:scale-[1.03] w-full mb-4" src={item.data.image} alt={item.data.title} width="445" height="230"/>
+                  )}
+                  <h2 className="mb-2 text-base font-bold">{item.data.title}</h2>
+                  <div className="items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
+                    <time className="text-[11px] flex flex-wrap gap-x-1 items-center text-light" aria-hidden="true">
+                      <BiRevision />
+                      <span className="text-[11px]">{dateFormat(item.data.date)}</span>
+                    </time>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@
 
 // container
 .container {
-  @apply mx-auto max-w-[1140px] px-0;
+  @apply mx-auto px-0;
 }
 
 // index title
@@ -16,6 +16,19 @@
 // sidebar title
 .sidebar-title {
   @apply font-bold border-b-2 border-b p-[0.3em] mb-3 relative after:content-[''] after:bg-primary after:w-16 after:h-0.5 after:absolute after:bottom-[-2px] after:left-0 after:z-10;
+}
+
+// top title
+.top-title {
+  &-icon {
+    @apply mb-2 flex justify-center items-center text-primary text-5xl;
+    @apply before:bg-primary before:content-[''] before:grow before:h-0.5 before:mr-3;
+    @apply after:bg-primary after:content-[''] after:grow after:h-0.5 after:ml-3;
+  }
+  &-sub {
+    @apply sm:text-[13px] text-xs tracking-[.15em];
+  }
+  @apply font-bold sm:text-2xl text-xl tracking-[.2em];
 }
 
 // form style
@@ -123,7 +136,8 @@
   @apply prose-pre:rounded-none;
   @apply prose-strong:text-dark;
   @apply prose-a:text-primary prose-a:no-underline hover:prose-a:underline;
-  @apply prose-ul:border-2 prose-ul:border-solid prose-ul:border-primary prose-ul:list-disc prose-ul:my-5 prose-ul:py-[11px] prose-ul:pr-5 prose-ul:pl-9;
+  @apply prose-ul:border-2 prose-ul:border-solid prose-ul:border-primary prose-ul:my-5 prose-ul:py-[11px] prose-ul:pr-5 prose-ul:pl-9;
+  @apply prose-ol:border-2 prose-ol:border-solid prose-ol:border-primary prose-ol:my-5 prose-ol:py-[11px] prose-ol:pr-5 prose-ol:pl-9;
   @apply prose-li:mt-2.5 prose-li:text-sm prose-li:sm:text-base;
 
   @apply prose-table:overflow-hidden prose-table:border prose-table:border-border;

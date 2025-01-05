@@ -13,7 +13,10 @@ const categories = await getTaxonomy(blog_folder, "categories");
 <Base title={"categories"}>
   <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
     <div class="container row">
-      <h1 class="index-title">カテゴリー</h1>
+      <h1 class="index-title">
+        カテゴリー
+        <small class="text-light italic ml-2">- category -</small>
+      </h1>
       <ul class="flex flex-col">
         {
           categories.map((category) => (

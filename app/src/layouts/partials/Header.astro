@@ -11,6 +11,7 @@ export interface ChildNavigationLink {
 
 export interface NavigationLink {
   name: string;
+  subName: string;
   url: string;
   hasChildren?: boolean;
   children?: ChildNavigationLink[];
@@ -88,11 +89,12 @@ const currentPath = new URL(Astro.request.url).pathname;
               <li class="nav-item">
                 <a
                   href={menu.url}
-                  class={`nav-link block ${
+                  class={`nav-link flex flex-col items-center px-3 py-2 ${
                     currentPath === menu.url && "active"
                   }`}
                 >
-                  {menu.name}
+                  <span class="text-sm">{menu.name}</span>
+                  <span class="text-[11px] text-light">{menu.subName}</span>
                 </a>
               </li>
             )}
@@ -101,7 +103,7 @@ const currentPath = new URL(Astro.request.url).pathname;
       }
       <li class="nav-item">
         <a
-          class="inline-block cursor-pointer p-2 text-xl text-dark hover:text-primary md:block"
+          class="inline-block cursor-pointer p-2 text-xl hover:text-primary md:block"
           href="/search"
         >
           <IoSearch />
