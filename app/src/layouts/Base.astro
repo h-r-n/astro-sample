@@ -6,13 +6,14 @@ import { getEntryBySlug } from "astro:content";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import config from "@/config/config.json";
 import theme from "@/config/theme.json";
-import { plainify, markdownify } from "@/lib/utils/textConverter";
+import { plainify } from "@/lib/utils/textConverter";
 import Footer from "@/partials/Footer.astro";
 import Header from "@/partials/Header.astro";
 import SideBar from "@/partials/SideBar.astro";
 import "@/styles/main.scss";
+import { getPickup } from "@/lib/contentParser.astro";
 const homepage = await getEntryBySlug("homepage", "index");
-const { banner } = homepage.data;
+// const { banner } = homepage.data;
 
 // font families
 const pf = theme.fonts.font_family.primary;
@@ -46,6 +47,8 @@ const { title, meta_title, description, image, noindex, canonical } =
 
 const currentPath = new URL(Astro.request.url).pathname;
 const isHome = currentPath === '/';
+
+const pickupPosts = await getPickup("posts");
 ---
 
 <!doctype html>
@@ -181,6 +184,37 @@ const isHome = currentPath === '/';
     <TwSizeIndicator />
     <Header />
     {isHome && (
+      <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white mt-3 mb-6 sm:mx-8 mx-2">
+        <div class="text-center mb-6">
+          <span class="sm:text-[13px] text-xs mb-1">まずはこの記事を読んでね</span>
+          <div class="text-primary font-bold sm:text-2xl text-xl tracking-[.15em]">＼ Pick Up ／</div>
+        </div>
+        <ul class="row sm:gx-3 gx-2 sm-gy-0 gy-2 mb-4">
+          {
+            pickupPosts.slice(0, 4).map((post) => (
+              <li class="col-6 sm:col-3">
+                <a
+                  href={`/posts/${post.slug}`}
+                  class="block hover:opacity-75"
+                >
+                  {post.data.image && (
+                    <Image
+                      class="group-hover:scale-[1.03]"
+                      src={post.data.image}
+                      alt={post.data.title}
+                      width="445"
+                      height="230"
+                    />
+                  )}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    )}
+    <!-- バナーを表示する場合はここをアンコメント -->
+    <!-- {isHome && (
       <section
         class="banner mb-8"
         style="background-image: url('/images/banner/banner-bg.svg')"
@@ -200,7 +234,7 @@ const isHome = currentPath === '/';
           </div>
         </div>
       </section>
-    )}
+    )} -->
     <div class="px-2 sm:px-8 grid grid-cols-4 gap-6">
       <main id="main-content" class="col-span-4 lg:col-span-3">
         <slot />

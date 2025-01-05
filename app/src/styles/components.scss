@@ -18,6 +18,19 @@
   @apply font-bold border-b-2 border-b p-[0.3em] mb-3 relative after:content-[''] after:bg-primary after:w-16 after:h-0.5 after:absolute after:bottom-[-2px] after:left-0 after:z-10;
 }
 
+// top title
+.top-title {
+  &-icon {
+    @apply mb-2 flex justify-center items-center text-primary text-5xl;
+    @apply before:bg-primary before:content-[''] before:grow before:h-0.5 before:mr-3;
+    @apply after:bg-primary after:content-[''] after:grow after:h-0.5 after:ml-3;
+  }
+  &-sub {
+    @apply sm:text-[13px] text-xs tracking-[.15em];
+  }
+  @apply font-bold sm:text-2xl text-xl tracking-[.2em];
+}
+
 // form style
 .form-inputs * {
   @apply mb-5 leading-10;

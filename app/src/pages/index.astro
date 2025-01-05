@@ -1,4 +1,5 @@
 ---
+import { PiArticleNyTimesLight } from "react-icons/pi";
 import Base from "@/layouts/Base.astro";
 import Posts from "@/components/Posts.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
@@ -10,12 +11,22 @@ const sortPostByDate = sortByDate(posts);
 <Base>
   <!-- Blogs -->
   <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
-    <h1 class="index-title">新着記事</h1>
+    <div class="text-center border-b-2 border-primary mb-12">
+      <div class="top-title-icon">
+        <PiArticleNyTimesLight />
+      </div>
+      <div class="pb-4">
+        <span class="top-title-sub">新着記事</span>
+        <h2 class="top-title">NEW POST</h2>
+      </div>
+    </div>
     <div class="container row">
       <Posts posts={sortPostByDate} />
-      <a href="/posts" class="pointer btn btn-primary block w-full text-center mb-6 hover:opacity-75">
-        もっと見る
-      </a>
+      <div class="flex justify-center">
+        <a href="/posts" class="text-center pointer bg-primary text-sm mb-2.5 sm:mb-0 text-white px-6 py-3 block w-32 hover:opacity-75">
+          もっと見る
+        </a>
+      </div>
     </div>
   </div>
   <!-- ./End Blogs -->
