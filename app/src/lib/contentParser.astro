@@ -18,7 +18,6 @@ export const getPickup = async <C extends CollectionKey>(
   collectionName: C,
 ): Promise<CollectionEntry<C>[]> => {
   const allPages = await getCollection(collectionName);
-  console.log(allPages)
   const pickUpPages = allPages.filter((data) => data.data.pickup);
   return pickUpPages;
 };

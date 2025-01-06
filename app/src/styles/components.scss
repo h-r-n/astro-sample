@@ -21,7 +21,7 @@
 // top title
 .top-title {
   &-icon {
-    @apply mb-2 flex justify-center items-center text-primary text-5xl;
+    @apply mb-2 flex justify-center items-center text-primary text-4xl sm:text-5xl;
     @apply before:bg-primary before:content-[''] before:grow before:h-0.5 before:mr-3;
     @apply after:bg-primary after:content-[''] after:grow after:h-0.5 after:ml-3;
   }
@@ -46,7 +46,7 @@
   li {
     @apply inline-block;
     a {
-      @apply block h-11 w-11 rounded-full border border-primary bg-body text-center text-primary transition-all duration-300 hover:bg-primary hover:text-body;
+      @apply block h-11 w-11 rounded-full border border-primary bg-white text-center text-primary transition-all duration-300 hover:opacity-75;
       svg {
         @apply m-auto h-11;
       }
@@ -57,7 +57,7 @@
     li {
       @apply inline-block;
       a {
-        @apply block h-6 w-6 rounded-full border border-primary bg-body text-center text-primary transition-all duration-300 hover:bg-primary hover:text-body;
+        @apply block h-6 w-6 rounded-full border border-primary bg-white text-center text-primary transition-all duration-300 hover:bg-primary hover:text-white;
         svg {
           @apply m-auto h-6;
         }
@@ -194,4 +194,16 @@
 }
 .toc-item-h3 {
   @apply relative pl-7 mb-1 text-sm sm:text-[15px] before:absolute [counter-increment:toc] before:[content:counters(toc,"-")"."] before:left-0 before:top-[0.15rem] before:text-xs;
+}
+
+
+// ブログカードのUI
+.card-transition {
+  transition: 0.2s ease-in-out;
+  box-shadow: 0 0 3px 0 rgb(0 0 0 / 12%), 0 2px 3px 0 rgb(0 0 0 / 22%);
+
+  &:hover {
+    box-shadow: 0 15px 30px -5px rgb(0 0 0 / 15%), 0 0 5px rgb(0 0 0 / 10%);
+    transform: translateY(-4px);
+  }
 }

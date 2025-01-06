@@ -3,9 +3,9 @@ import Posts from "@/components/Posts.astro";
 import { settings } from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
-import Post from "@/layouts/components/Post.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
+import { PiArticleNyTimesLight } from "react-icons/pi";
 const posts = await getSinglePage("posts");
 const sortPostByDate = sortByDate(posts);
 const totalPages = Math.ceil(posts.length / settings.pagination);
@@ -15,10 +15,15 @@ const totalPages = Math.ceil(posts.length / settings.pagination);
   <!-- Blogs -->
   <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white">
     <div class="container row">
-      <h1 class="index-title">
-        ブログ
-        <small class="text-light italic ml-2">- blog -</small>
-      </h1>
+      <div class="text-center border-b-2 border-primary mb-12 px-0">
+        <div class="top-title-icon">
+          <PiArticleNyTimesLight />
+        </div>
+        <div class="pb-4">
+          <span class="top-title-sub">ブログ</span>
+          <h2 class="top-title">BLOG</h2>
+        </div>
+      </div>
       <Posts posts={sortPostByDate} />
       <Pagination section={"posts"} currentPage={1} totalPages={totalPages} />
     </div>

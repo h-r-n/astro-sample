@@ -183,8 +183,8 @@ const pickupPosts = await getPickup("posts");
   <body>
     <TwSizeIndicator />
     <Header />
-    {isHome && (
-      <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white mt-3 mb-6 sm:mx-8 mx-2">
+    {isHome && pickupPosts.length > 0 && (
+      <div class="section p-2.5 lg:p-8 shadow md:p-[60px] bg-white my-6 sm:mx-8 mx-2">
         <div class="text-center mb-6">
           <span class="sm:text-[13px] text-xs mb-1">まずはこの記事を読んでね</span>
           <div class="text-primary font-bold sm:text-2xl text-xl tracking-[.15em]">＼ Pick Up ／</div>
@@ -195,7 +195,7 @@ const pickupPosts = await getPickup("posts");
               <li class="col-6 sm:col-3">
                 <a
                   href={`/posts/${post.slug}`}
-                  class="block hover:opacity-75"
+                  class="block card-transition"
                 >
                   {post.data.image && (
                     <Image
