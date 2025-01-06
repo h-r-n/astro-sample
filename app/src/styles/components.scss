@@ -213,3 +213,12 @@
     transform: translateY(-4px);
   }
 }
+
+// タグやカテゴリーのUI
+.tag-transition {
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+}

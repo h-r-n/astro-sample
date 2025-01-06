@@ -36,7 +36,7 @@ const blogDate = dateBlogFormat(date);
               {categories.map((category: string, i: number) => (
                 <a
                   href={`/categories/${slugify(category)}`}
-                  class="bg-primary text-white leaping-none p-1 text-xs-fit hover:opacity-75"
+                  class="bg-primary text-white leaping-none p-1 text-xs-fit tag-transition"
                 >
                   {humanize(category)}
                 </a>
@@ -71,7 +71,7 @@ const blogDate = dateBlogFormat(date);
               {categories.map((category: string, i: number) => (
                 <a
                   href={`/categories/${slugify(category)}`}
-                  class="bg-primary text-white leaping-none p-1 text-xs-fit hover:opacity-75"
+                  class="bg-primary text-white leaping-none p-1 text-xs-fit tag-transition"
                 >
                   {humanize(category)}
                 </a>
@@ -82,7 +82,7 @@ const blogDate = dateBlogFormat(date);
               {tags.map((tag: string, i: number) => (
                 <a
                   href={`/tags/${slugify(tag)}`}
-                  class="bg-white text-primary border-primary p-1 border text-xs-fit hover:opacity-75"
+                  class="bg-white text-primary border-primary p-1 border text-xs-fit tag-transition"
                 >
                   # {humanize(tag)}
                 </a>
