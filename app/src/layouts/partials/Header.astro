@@ -36,7 +36,7 @@ const currentPath = new URL(Astro.request.url).pathname;
       for="nav-toggle"
       class="order-2 flex cursor-pointer items-center md:order-1 md:hidden"
     >
-      <svg class="h-6 fill-current text-white" viewBox="0 0 20 20">
+      <svg class="h-6 fill-current" viewBox="0 0 20 20">
         <title>Menu Open</title>
         <path d="M0 3h20v2H0V3z m0 6h20v2H0V9z m0 6h20v2H0V0z"></path>
       </svg>
@@ -46,7 +46,7 @@ const currentPath = new URL(Astro.request.url).pathname;
       for="nav-toggle"
       class="order-2 hidden cursor-pointer items-center md:order-1"
     >
-      <svg class="h-6 fill-current text-white" viewBox="0 0 20 20">
+      <svg class="h-6 fill-current" viewBox="0 0 20 20">
         <title>Menu Close</title>
         <polygon
           points="11 9 22 9 22 11 11 11 11 22 9 22 9 11 -2 11 -2 9 9 9 9 -2 11 -2"
@@ -89,7 +89,7 @@ const currentPath = new URL(Astro.request.url).pathname;
               <li class="nav-item">
                 <a
                   href={menu.url}
-                  class={`nav-link text-white flex flex-col items-center px-3 py-2 ${
+                  class={`nav-link flex flex-col items-center hover:text-primary px-3 py-2 ${
                     currentPath === menu.url && "active"
                   }`}
                 >
@@ -103,10 +103,10 @@ const currentPath = new URL(Astro.request.url).pathname;
       }
       <li class="nav-item">
         <a
-          class="inline-block cursor-pointer p-2 text-xl hover:opacity-75 md:block"
+          class="inline-block cursor-pointer p-2 text-xl hover:text-primary md:block"
           href="/search"
         >
-          <IoSearch className="text-white" />
+          <IoSearch />
         </a>
       </li>
     </ul>
