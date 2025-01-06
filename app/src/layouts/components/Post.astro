@@ -6,25 +6,25 @@ const { post } = Astro.props;
 ---
 
 <li class="col-12 sm:col-6 mb-6 sm:mb-8">
-  <a
-    href={`/posts/${post.slug}`}
-    class="block hover:opacity-75"
-  >
-    {post.data.image && (
+  <a href={`/posts/${post.slug}`}>
+    <div class="overflow-hidden relative card-transition">
       <Image
-        class="group-hover:scale-[1.03] w-full mb-4"
+        class="w-full"
         src={post.data.image}
         alt={post.data.title}
         width="445"
         height="230"
       />
-    )}
-    <h2 class="mb-2 text-base font-bold">{post.data.title}</h2>
-    <div class="items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
-      <time class="text-[11px] flex flex-wrap gap-x-1 items-center text-light" datetime={dateFormat(post.data.date, "yyyy-MM-dd")} aria-hidden="true">
-        <BiRevision />
-        <span class="text-[11px]">{dateFormat(post.data.date)}</>
-      </time>
+      <div class="p-3">
+        <h2 class="mb-2 text-base font-bold">{post.data.title}</h2>
+        <div class="items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
+          <time class="text-[11px] flex flex-wrap gap-x-1 items-center text-light" datetime={dateFormat(post.data.date, "yyyy-MM-dd")} aria-hidden="true">
+            <BiRevision />
+            <span class="text-[11px]">{dateFormat(post.data.date)}</span>
+          </time>
+        </div>
+      </div>
+      <span class="absolute top-2.5 left-2.5 bg-body px-3 py-1 text-[11px] rounded-full">{post.data.categories}</span>
     </div>
   </a>
 </li>
