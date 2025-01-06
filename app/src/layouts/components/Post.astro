@@ -7,7 +7,7 @@ const { post } = Astro.props;
 
 <li class="col-12 sm:col-6 mb-6 sm:mb-8">
   <a href={`/posts/${post.slug}`}>
-    <div class="overflow-hidden relative card-transition">
+    <div class="overflow-hidden relative card-transition h-full">
       <Image
         class="w-full"
         src={post.data.image}
@@ -24,7 +24,7 @@ const { post } = Astro.props;
           </time>
         </div>
       </div>
-      <span class="absolute top-2.5 left-2.5 bg-body px-3 py-1 text-[11px] rounded-full">{post.data.categories}</span>
+      <span class="absolute top-2.5 left-2.5 bg-body px-3 py-1 text-[11px] rounded-full">{post.data.categories[0]}</span>
     </div>
   </a>
 </li>

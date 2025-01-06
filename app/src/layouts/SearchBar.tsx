@@ -88,17 +88,21 @@ export default function SearchBar({ searchList }: Props) {
               <li className="col-12 sm:col-6 mb-6 sm:mb-8">
                 <a
                   href={`/posts/${item.slug}`}
-                  className="block hover:opacity-75"
                 >
-                  {item.data.image && (
-                    <img className="group-hover:scale-[1.03] w-full mb-4" src={item.data.image} alt={item.data.title} width="445" height="230"/>
-                  )}
-                  <h2 className="mb-2 text-base font-bold">{item.data.title}</h2>
-                  <div className="items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
-                    <time className="text-[11px] flex flex-wrap gap-x-1 items-center text-light" aria-hidden="true">
-                      <BiRevision />
-                      <span className="text-[11px]">{dateFormat(item.data.date)}</span>
-                    </time>
+                  <div className="overflow-hidden relative card-transition h-full">
+                    {item.data.image && (
+                      <img className="w-full" src={item.data.image} alt={item.data.title} width="445" height="230"/>
+                    )}
+                    <div className="p-3">
+                      <h2 className="mb-2 text-base font-bold">{item.data.title}</h2>
+                      <div className="items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
+                        <time className="text-[11px] flex flex-wrap gap-x-1 items-center text-light" aria-hidden="true">
+                          <BiRevision />
+                          <span className="text-[11px]">{dateFormat(item.data.date)}</span>
+                        </time>
+                      </div>
+                    </div>
+                    <span className="absolute top-2.5 left-2.5 bg-body px-3 py-1 text-[11px] rounded-full">{item.data.categories[0]}</span>
                   </div>
                 </a>
               </li>
