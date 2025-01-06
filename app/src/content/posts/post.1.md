@@ -3,8 +3,8 @@ title: "CategoryはParkとMovieでTagはDisneyLandとDisney+の投稿"
 image: "/images/post/post-3.jpg"
 date: 2019-11-07T05:00:00Z
 description: "This is meta description"
-categories: ["Park", "Movie"]
-tags: ["DisneyLand", "Disney+"]
+categories: ["ディズニーパーク"]
+tags: ["DisneyLand", "Disney+", "ディズニーシー"]
 type: "post"
 pickup: false
 ---

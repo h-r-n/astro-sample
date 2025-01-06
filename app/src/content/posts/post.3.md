@@ -3,8 +3,8 @@ title: "CategoryはParkのみでTagはDisney+のみの投稿"
 image: "/images/post/post-3.jpg"
 date: 2019-11-07T05:00:00Z
 description: "This is meta description"
-categories: ["Park"]
-tags: ["Disney+"]
+categories: ["ディズニー映画"]
+tags: ["Disney+", "ディズニープラス"]
 type: "post"
 pickup: false
 ---

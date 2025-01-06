@@ -3,8 +3,8 @@ title: "CategoryはParkのみでTagはDisneyLandのみの投稿"
 image: "/images/post/post-3.jpg"
 date: 2019-11-11T05:00:00Z
 description: "This is meta description"
-categories: ["Park"]
-tags: ["DisneyLand"]
+categories: ["MARVEL"]
+tags: ["DisneyLand", "ディズニーランド"]
 type: "post"
 pickup: true
 ---
