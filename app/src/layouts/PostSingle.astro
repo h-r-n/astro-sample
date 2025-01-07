@@ -7,6 +7,7 @@ import type { PostData } from "@/types";
 import AroundPost from "./components/AroundPost.astro";
 import RelatedPosts from "./components/RelatedPosts.astro";
 import Toc from "./components/Toc.astro";
+import LinkCard from "./components/LinkCard.astro";
 
 const { post } = Astro.props;
 const { Content } = await post.render();
@@ -36,7 +37,7 @@ const blogDate = dateBlogFormat(date);
               {categories.map((category: string, i: number) => (
                 <a
                   href={`/categories/${slugify(category)}`}
-                  class="bg-primary text-white leaping-none p-1 text-xs-fit hover:opacity-75"
+                  class="bg-primary text-white leaping-none p-1 text-xs-fit tag-transition"
                 >
                   {humanize(category)}
                 </a>
@@ -61,6 +62,7 @@ const blogDate = dateBlogFormat(date);
           <div class="content mb-16 text-left">
             <Content components={{
               Toc,
+              LinkCard
             }} />
             <!-- <Markdown content={post.body} components={shortcodes} /> -->
           </div>
@@ -71,7 +73,7 @@ const blogDate = dateBlogFormat(date);
               {categories.map((category: string, i: number) => (
                 <a
                   href={`/categories/${slugify(category)}`}
-                  class="bg-primary text-white leaping-none p-1 text-xs-fit hover:opacity-75"
+                  class="bg-primary text-white leaping-none p-1 text-xs-fit tag-transition"
                 >
                   {humanize(category)}
                 </a>
@@ -82,7 +84,7 @@ const blogDate = dateBlogFormat(date);
               {tags.map((tag: string, i: number) => (
                 <a
                   href={`/tags/${slugify(tag)}`}
-                  class="bg-white text-primary border-primary p-1 border text-xs-fit hover:opacity-75"
+                  class="bg-white text-primary border-primary p-1 border text-xs-fit tag-transition"
                 >
                   # {humanize(tag)}
                 </a>

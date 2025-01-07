@@ -1,5 +1,4 @@
 ---
-import Breadcrumb from "@/components/Breadcrumb.astro";
 import Logo from "@/components/Logo.astro";
 import menu from "@/config/menu.json";
 import { IoSearch } from "react-icons/io5";
@@ -112,7 +111,6 @@ const currentPath = new URL(Astro.request.url).pathname;
     </ul>
   </nav>
 </header>
-<Breadcrumb />
 
 <script>
   document.addEventListener("astro:page-load", () => {

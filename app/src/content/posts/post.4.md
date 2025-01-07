@@ -3,7 +3,7 @@ title: "CategoryはMovieのみでTagはDisneyLandのみの投稿"
 image: "/images/post/post-1.jpg"
 date: 2019-11-07T05:00:00Z
 description: "This is meta description"
-categories: ["Movie"]
+categories: ["ディズニー映画"]
 tags: ["DisneyLand"]
 type: "post"
 pickup: false

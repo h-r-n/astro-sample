@@ -8,23 +8,26 @@ const { post } = Astro.props;
 <li class="col-6 sm:col-4 mb-4 sm:mb-6">
   <a
     href={`/posts/${post.slug}`}
-    class="block hover:opacity-75"
   >
-    {post.data.image && (
-      <Image
-        class="group-hover:scale-[1.03] w-full mb-4"
-        src={post.data.image}
-        alt={post.data.title}
-        width="445"
-        height="230"
-      />
-    )}
-    <div class="mb-1 text-sm font-bold">
-      {post.data.title}
+    <div class="overflow-hidden card-transition h-full">
+      {post.data.image && (
+        <Image
+          class="w-full"
+          src={post.data.image}
+          alt={post.data.title}
+          width="445"
+          height="230"
+        />
+      )}
+      <div class="p-3">
+        <div class="mb-2 text-sm font-bold">{post.data.title}</div>
+        <div class="items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
+          <time class="text-[11px] flex flex-wrap gap-x-1 items-center text-light" datetime={dateFormat(post.data.date, "yyyy-MM-dd")} aria-hidden="true">
+            <BiRevision />
+            <span class="text-[11px]">{dateFormat(post.data.date)}</span>
+          </time>
+        </div>
+      </div>
     </div>
-    <time class="text-[11px] flex flex-wrap gap-x-1 items-center text-light" datetime={dateFormat(post.data.date, "yyyy-MM-dd")} aria-hidden="true">
-      <BiRevision />
-      <span class="text-[11px]">{dateFormat(post.data.date)}</>
-    </time>
   </a>
 </li>
