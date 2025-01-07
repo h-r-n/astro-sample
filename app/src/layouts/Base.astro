@@ -2,7 +2,7 @@
 import { AstroFont } from "astro-font";
 import { Image } from "astro:assets";
 import { ViewTransitions } from "astro:transitions";
-import { getEntryBySlug } from "astro:content";
+// import { getEntryBySlug } from "astro:content";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
 import config from "@/config/config.json";
 import theme from "@/config/theme.json";
@@ -12,7 +12,7 @@ import Header from "@/partials/Header.astro";
 import SideBar from "@/partials/SideBar.astro";
 import "@/styles/main.scss";
 import { getPickup } from "@/lib/contentParser.astro";
-const homepage = await getEntryBySlug("homepage", "index");
+// const homepage = await getEntryBySlug("homepage", "index");
 // const { banner } = homepage.data;
 
 // font families
@@ -184,7 +184,7 @@ const pickupPosts = await getPickup("posts");
     <TwSizeIndicator />
     <Header />
     {isHome && pickupPosts.length > 0 && (
-      <div class="section p-2.5 lg:p-8 shadow sm:p-[60px] bg-white my-6 sm:mx-8 mx-2">
+      <section class="section p-2.5 lg:p-8 shadow sm:p-[60px] bg-white my-6 sm:mx-8 mx-2">
         <div class="text-center mb-6">
           <span class="sm:text-[13px] text-xs mb-1">まずはこの記事を読んでね</span>
           <div class="text-primary font-bold sm:text-2xl text-xl tracking-[.15em]">＼ Pick Up ／</div>
@@ -211,7 +211,7 @@ const pickupPosts = await getPickup("posts");
             ))
           }
         </ul>
-      </div>
+      </section>
     )}
     <!-- バナーを表示する場合はここをアンコメント -->
     <!-- {isHome && (
@@ -235,12 +235,12 @@ const pickupPosts = await getPickup("posts");
         </div>
       </section>
     )} -->
-    <div class="px-2 sm:px-8 grid grid-cols-4 gap-6">
+    <section class="px-2 sm:px-8 grid grid-cols-4 gap-6">
       <main id="main-content" class="col-span-4 lg:col-span-3">
         <slot />
       </main>
       <SideBar />
-    </div>
+    </section>
     <Footer />
   </body>
 </html>
