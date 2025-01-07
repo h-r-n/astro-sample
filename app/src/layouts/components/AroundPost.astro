@@ -19,29 +19,29 @@ if (sortPostByDate[currentPostIndex - 1]) {
 }
 ---
 <ul class="items-stretch flex justify-between mb-8">
-  <li class="w-[49%]">
+  <li class="w-[49%] flex">
     {
       prevPost && (
         <a
-          class="relative flex items-center w-full hover:opacity-75"
+          class="relative flex items-center w-full tag-transition"
           href={'/' + prevPost.collection + '/' + prevPost.slug}
           title={prevPost.data.title}
         >
           <BiChevronLeft className="absolute text-white" />
-          <span class="px-4 py-3 text-sm border-l-[16px] border-primary">{prevPost.data.title}</span>
+          <span class="px-4 py-3 text-sm border-l-[16px] border-primary h-full">{prevPost.data.title}</span>
         </a>
       )
     }
   </li>
-  <li class="w-[49%]">
+  <li class="w-[49%] flex justify-end">
     {
       nextPost && (
         <a
-          class="relative flex items-center justify-end hover:opacity-75"
+          class="relative flex items-center justify-end tag-transition"
           href={'/' + nextPost.collection + '/' + nextPost.slug}
           title={nextPost.data.title}
         >
-          <span class="px-4 py-3 text-sm border-r-[16px] border-primary">{nextPost.data.title}</span>
+          <span class="px-4 py-3 text-sm border-r-[16px] border-primary h-full">{nextPost.data.title}</span>
           <BiChevronRight className="absolute text-white right-0" />
         </a>
       )
