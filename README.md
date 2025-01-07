@@ -4,3 +4,12 @@
 ```
 <Toc headings={getHeadings()} />
 ```
+
+### 内部リンクを入れたい
+内部リンクを入れたい箇所に以下のタグを挿入する
+```
+<LinkCard path="/posts/category-2" />
+```
+- path: リンク先のパスを渡す
+- caption: キャプションを渡す。デフォルトは「あわせて読みたい」
+- 
