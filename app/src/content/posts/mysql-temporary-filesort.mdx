@@ -1,0 +1,230 @@
+---
+title: "【MySQL】Using temporary と Using filesort が出るクエリについて"
+image: "/images/post/post-3.jpg"
+date: 2024-09-09T13:00:00Z
+description: "ActiveSupport::Concernについてソースコードを見ながら解説しました！"
+categories: ["MySQL"]
+tags: ["MySQL", "Ruby", "Rails", "パフォーマンス改善"]
+type: "post"
+pickup: true
+---
+
+## はじめに
+
+MySQL にてクエリを EXPLAIN すると Using temporary と Using filesort が同時に表示されることがある
+
+調べてみるとこの2つが表示されたらクエリ改善が必須と出てくるが、そもそもなぜ表示されるのか？どういう時に表示されるのか？
+
+今回はこちらについて調査した
+
+## 先に結論
+
+Using temporary と Using filesort は内部表でソートをした場合に表示され、インデックスを用いた改善は難しい
+
+駆動表を使ったソートで Using filesort が表示された場合はインデックスで改善できる可能性がある
+
+## 内容
+
+### Using temporary / Using filesort とは
+
+まず、そもそも Using temporary と Using filesort とは何か
+
+MySQL のドキュメントにはそれぞれ以下のように記載されている
+
+> ・Using filesort (JSON プロパティ): using_filesort )
+> MySQL はソート順で行を取得する方法を見つけるために、追加のパスを実行する必要があります。 ソートは、結合型に従ってすべての行を進み、ソートキーと WHERE 句に一致するすべての行について行へのポインタを格納して実行されます。 次にキーがソートされ、ソート順で行が取得されます。 [セクション8.2.1.16「ORDER BY の最適化」](https://dev.mysql.com/doc/refman/8.0/ja/order-by-optimization.html)を参照してください。
+>
+> ・Using temporary (JSON プロパティ): using_temporary_table )
+> クエリーを解決するために、MySQL は結果を保持する一時テーブルを作成する必要があります。 これは一般に、クエリーに、カラムを異なって一覧表示する GROUP BY 句と ORDER BY 句が含まれる場合に発生します。
+>
+> 引用元：https://dev.mysql.com/doc/refman/8.0/ja/explain-output.html
+
+
+どうやら Using filesort は、インデックスを使用して ORDER BY 句を満たすことができず、テーブルの行を読み取ってソートする追加操作をした際に表示されるっぽい
+
+Using temporary は、結果を保持するために一時テーブルを作成する必要がある場合に表示されるっぽい
+
+説明だけ見てもわかりづらいので、ここからは Using filesort と Using temporary について具体例を用いながら見ていく
+
+### NLJの仕組み
+
+具体例を見ていく前に MySQL の結合処理である NLJ について軽く触れておく
+
+NLJ は Nested Loop Join の略で、MySQL では結合処理は基本的に NLJ しか実装されていない
+
+例えば、以下のようなクエリの場合
+
+```sql
+SELECT
+  *
+FROM
+  table1, table2
+WHERE
+  table1.column1 = 1
+  AND table1.column2 = table2.column3;
+```
+
+NLJ が結果を返す流れは以下のようになる
+
+```ruby
+for record1 in fetch(table1, { "column1": 1 }) # ①
+  for record2 in fetch(table2, { "column3": record1.column2 }) # ②
+    return (record1 + record2) # ③
+```
+
+1. 最初の for 文で table1から条件に合致するレコードを1レコード取得
+2. 次の for 文で ①の結果を元に条件に合致するレコードをtable2から1レコード取得
+3. 結果を返す
+
+要は Nested Loop という名前の通り、ループの中でさらにループをしながら結合処理を行っている
+
+この時、外側でループしている table1 を**駆動表**、内側でループしている table2 を**内部表**という
+
+### 駆動表でソートするパターン
+
+ここからは上記を踏まえた上で、以下のテーブル構成の DB に問い合わせをするクエリを見ながら内部でどのような処理が行われているのかを見ていく
+
+![ralationの画像](/images/post/relation.webp)
+
+まず以下のクエリを見てみる
+
+```sql
+SELECT
+	`answers` .*
+FROM
+	`answers`
+INNER JOIN `questions` `question` ON
+	`question`.`id` = `answers`.`question_id`
+WHERE
+	`question`.`user_id` = 100
+```
+
+このクエリはユーザーID 100のユーザーが投稿した質問に対する回答を取得している
+
+このクエリの実行計画を確認すると、rows も小さく filtered も 100% で インデックスが適切に使われており、特段問題がないクエリであることがわかる
+
+| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | SIMPLE | question |  | ref | PRIMARY,user_id | user_id | 5 | const | 1 | 100 | Using index |
+| 1 | SIMPLE | answers |  | ref | question_id | question_id | 5 | question.id | 3 | 100 |  |
+
+では、次に以下のクエリを見てみる
+
+```sql
+SELECT
+	`answers` .*
+FROM
+	`answers`
+INNER JOIN `questions` `question` ON
+	`question`.`id` = `answers`.`question_id`
+WHERE
+	`question`.`user_id` = 100
+ORDER BY
+	`question`.`created` DESC
+```
+
+このクエリはユーザーID 100のユーザーが投稿した質問に対する回答を「**質問投稿日時の降順で**」取得している
+
+こんな要件はほとんどなさそうだが、説明の都合上このクエリで見ていく
+
+このクエリの実行計画を確認すると、Extra の項目に Using filesort が表示されており改善が必要であることがわかる
+
+| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | SIMPLE | question |  | ref | PRIMARY,user_id | user_id | 5 | const | 3 | 100 | Using filesort |
+| 1 | SIMPLE | answers |  | ref | question_id | question_id | 5 | question.id | 3 | 100 |  |
+
+今回の実行計画をコードに落とし込むと以下のようになる
+
+```ruby
+for question in sort(fetch(questions, { "user_id": 100 }))
+  for answer in fetch(answers, { "question_id": question.id })
+    return(answer)
+```
+
+1行目の sort の処理が クイックソートの処理にあたり、インデックスを使用して ORDER BY 句を満たすことができていないため、filesort の処理を行っていることがわかる
+
+そのため実行計画の Extra の項目に Using filesort が表示されてしまっている
+
+このケースについてはインデックスを使うことで filesort の処理が必要なくなるため、Using filesort の表示を消すことができそう
+
+実際に questions テーブルに、user_id と created の複合インデックス（user_id_created）を貼って確かめてみる
+
+| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | SIMPLE | question |  | ref | PRIMARY,user_id,user_id_created | user_id_created | 5 | const | 3 | 100 | Backward index scan; Using index |
+| 1 | SIMPLE | answers |  | ref | question_id | question_id | 5 | question.id | 3 | 100 |  |
+
+key の項目を確認すると user_id_created のインデックスが使われており、Extra の項目からも  Using filesort が消えていることがわかる
+
+今回の実行計画をコードに落とし込むと以下のようになる
+
+```ruby
+for question in fetch(questions, { "user_id": 100 })
+  for answer in fetch(answers, { "question_id": question.id })
+    return(answer)
+```
+
+インデックスを貼っているため、あらかじめ質問を user_id ごとにグルーピングし、その中で created 順で並べ替えた状態でフェッチできるため filesort 処理をしていないことがわかる
+
+このパターンでは駆動表（questions）のカラムでソート処理を行っているため、インデックスを使ってクエリを、改善することができた
+
+### 内部表でソートするパターン
+
+次に以下のクエリを見ていく
+
+```sql
+SELECT
+	`answers` .*
+FROM
+	`answers`
+INNER JOIN `questions` `question` ON
+	`question`.`id` = `answers`.`question_id`
+WHERE
+	`question`.`user_id` = 100
+ORDER BY
+	`answers`.`created` DESC
+```
+
+このクエリはユーザーIDが100のユーザーが投稿した質問に対する回答を「**回答日時の降順で**」取得している
+
+先に結論を言うと、このクエリはどんなインデックスを使っても改善できない可能性が高い
+
+理由は ORDER BY に内部表（answers）を指定しているから
+
+実際にこのクエリの実行計画を確認すると、Extra の項目に Using temporary と Using filesort が表示されていることがわかる
+
+| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | SIMPLE | question |  | ref | PRIMARY,user_id | user_id | 5 | const | 3 | 100 | Using index; Using temporary; Using filesort |
+| 1 | SIMPLE | answers |  | ref | question_id | question_id | 5 | question.id | 3 | 100 |  |
+
+今回の実行計画をコードに落とし込むと以下のようになる
+
+```ruby
+temporary_table = []
+
+for question in fetch(questions, { "user_id": 100 })
+  for answer in fetch(answers, { "question_id": question.id })
+    temporary_table.push([question, answer])
+
+# temporary_table内でanswers.createdの降順に並び替えを行う
+for question, answer in sort(temporary_table)
+  return(answer)
+```
+
+まず条件に合う質問と回答をテンポラリテーブルに入れ、そのテンポラリテーブルのレコードをソートして結果をリターンしている
+
+この最初のステップのテンポラリテーブルへの push が Using temporary で、次のステップのソート処理が Using filesort にあたる
+
+このように内部表を使って ORDER BY を行っているクエリでは一時テーブルにデータを展開した後 filesort を実行してデータのソートを行ってから結果を返すため、実行されるクエリは遅くなる傾向にある
+
+例えば、上記の例でユーザーID 100のユーザーが100件の質問をしており、各質問に対して100件の回答がついていた場合、レコード数1万件（100 × 100）のテンポラリテーブルを作った上で、さらにそのテーブルをソートする処理が走ることになる
+
+そう考えると Using temporary と Using filesort のクエリ改善が必要である理由がわかるかもしれない
+
+## おわりに
+
+今回は 内部表で ORDER BY をすると Using temporary, Using filesort になってしまうことを確認したが、Using temporary, Using filesort が表示されるパターンは他にもありそう（[こちら](https://dev.mysql.com/doc/refman/8.0/ja/internal-temporary-tables.html)が参考になりそう）
+
+他のパターンに出会った際は別記事でアウトプットしたい
