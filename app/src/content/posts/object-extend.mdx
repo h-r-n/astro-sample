@@ -1,0 +1,75 @@
+---
+title: "【Ruby】Object#extendとは"
+image: "/images/post/post-3.jpg"
+date: 2024-04-20T00:02:00Z
+description: "ActiveSupport::Concernについてソースコードを見ながら解説しました！"
+categories: ["Ruby"]
+tags: ["Ruby", "Rails"]
+type: "post"
+pickup: true
+---
+
+## Object#extendとは
+
+Object#extendとは、Rubyの組み込みライブラリに含まれるObjectクラスのインスタンスメソッド
+
+引数で指定したモジュールのインスタンスメソッドを self の特異メソッドとして追加する
+
+Module#includeは、クラス(のインスタンス)に機能を追加するが、extend は、ある特定のオブジェクトだけにモジュールの機能を追加したいときに使用する
+
+```ruby
+module M1
+  def hoge
+    puts 'M1#hoge'
+  end
+end
+
+module M2
+  def fuga
+    puts 'M2.fuga'
+  end
+end
+
+class C1
+  include M1
+  extend M2
+end
+
+C1.new.hoge
+# => M1#hoge
+
+# 引数で指定したモジュールのインスタンスメソッドを self の特異メソッドとして追加する
+C1.fuga
+# => M2.fuga
+```
+
+## 引数について
+
+引数は可変長引数なので配列として受け取られるため複数モジュール指定可能
+
+**`extend(*modules) -> self`**
+
+引数に複数のモジュールを指定した場合、最後の引数から逆順に extend を行う
+
+## Object#extendの実態
+
+Object#extendの実態はModuleクラスのextend_objectインスタンスメソッド
+
+extendメソッドはRubyで書くと以下のように定義できる
+
+Module#extend_object → モジュール（またはクラス）に self の機能を追加する
+
+Module#extended → self が extend されたときに対象のクラスまたはモジュールを引数にインタプリタが呼び出すメソッド（フックメソッド）
+
+```ruby
+def extend(*modules)
+  modules.reverse_each do |mod|
+    # extend_object や extended はプライベートメソッドなので
+    # 直接 mod.extend_object(self) などとは書けない
+    mod.__send__(:extend_object, self)
+    mod.__send__(:extended, self)
+  end
+end
+```
+
+> 参考：https://docs.ruby-lang.org/ja/latest/method/Module/i/extend_object.html

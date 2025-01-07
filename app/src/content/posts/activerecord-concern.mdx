@@ -1,0 +1,553 @@
+---
+title: "【Rails】ActiveSupport::Concernとは"
+image: "/images/post/post-3.jpg"
+date: 2024-04-20T00:02:00Z
+description: "ActiveSupport::Concernについてソースコードを見ながら解説しました！"
+categories: ["Rails"]
+tags: ["Ruby", "Rails"]
+type: "post"
+pickup: true
+---
+
+## はじめに
+
+### この記事は何か
+
+Railsのソースコードリーディングをしているとよく見かける以下の1文
+
+```ruby
+extend ActiveSupport::Concern
+```
+
+実際に Rails7.1.3.2 のリポジトリで grep すると235ファイルヒットすることからも ActiveSupport::Concern モジュールは Rails で非常によく使われているモジュールであることがわかる
+
+今回はそんな ActiveSupport::Concern モジュールについて、使い方を確認した上でモジュールの中身を紐解いていく
+
+### 対象は誰か
+
+Rails やその他 gem のソースコードリーディングに挑戦しようとしてる人
+
+### この記事のねらい
+
+Rails のソースコードでよく出てくる ActiveSupport::Concern を理解することで、ソースコードリーディングの解像度を上げたい
+
+<Toc headings={getHeadings()} />
+
+## 先に結論
+
+ActiveSupport::Concern とは、クラスメソッドを追加する機能をカプセル化して、モジュールを include（もしくは prepend） した時にインスタンスメソッドだけではなく、クラスメソッドも取得できるようにするモジュールのこと
+
+モジュールに ActiveSupport::Concern を extend しておくことによって、依存関係を適切に管理しながらクラスメソッドの追加機能を簡単に使えるようになる
+
+## 内容
+
+### ActiveSupport::Concernとは
+
+モジュールを include した時に、ベースクラスにインスタンスメソッドと一緒にクラスメソッドも一緒に追加する機能をカプセル化した Rails のモジュール
+
+モジュールに ActiveSupport::Concern を extend しておくことによって、クラスメソッドの追加機能を簡単に使えるようになる
+
+### ActiveSupport::Concernの使い方
+
+```ruby
+module M
+  #モジュールの中でActiveSupport::Concernモジュールをextendする
+  extend ActiveSupport::Concern
+
+  def instance_method
+    puts "M#instance_method"
+  end
+  
+  included do
+    attr_accessor :name
+  end
+
+  #ClassMethodsモジュールの中で、ベースクラスに追加するクラスメソッドを定義する
+  module ClassMethods
+    def class_method
+      puts "M.class_method"
+    end
+  end
+end
+
+class C
+  #ActiveSupport::Concernをextendしたモジュールをincludeする
+  include M
+end
+
+c = C.new
+c.instance_method 
+# => M#instance_method
+
+c.name = "C#name"
+c.name
+# => C#name
+
+C.class_method
+# => M.class_method
+```
+
+上記の例のように ActiveSupport::Concern モジュールを extend したモジュールの中で、インスタンスメソッドとは別で、ベースクラスに対してクラスメソッドとして追加したいメソッドを ClassMethods モジュールのスコープ内で定義する
+
+このモジュールを include すると、ベースクラスで ActiveSupport::Concern モジュールを extend したモジュールのインスタンスメソッドだけではなく、クラスメソッドも使えるようになる
+
+※後述するが ClassMethods モジュールは class_methods メソッドで定義することもできる
+
+<Notice type="note">
+本記事では以下の名称を使う
+
+📝 ActiveSupport::Concern を extend したモジュール = 「**concern**」
+
+📝 concern を include したクラス = 「**ベースクラス**」
+</Notice>
+
+以下を例にとると M モジュールが「concern」、C クラスが「ベースクラス」ということになる
+
+※ここを覚えておかないと本記事の内容が8割方理解できなくなるので、曖昧になった際は都度戻ってきて確認して欲しい
+
+```ruby
+module M
+  extend ActiveSupport::Concern
+
+  def instance_method
+    puts "M#instance_method"
+  end
+  
+  included do
+    attr_accessor :name
+  end
+
+  module ClassMethods
+    def class_method
+      puts "M.class_method"
+    end
+  end
+end
+
+class C
+  include M
+end
+```
+
+### Railsのソースコードで実際に使われている箇所
+
+上で ActiveSupport::Concern の使い方を確認したが、Rails のソースコードでは実際どのように使われているのか？典型的な User モデルを例に見ていく
+
+以下の User クラスは username のバリデーションが定義されており、ApplicationRecord クラスを継承している
+
+```ruby
+# app/models/user.rb
+
+class User < ApplicationRecord
+  validates :username, presence: true
+end
+```
+
+ApplicationRecord クラスは ActiveRecord::Base クラスを継承している
+
+```ruby
+# app/models/application_record.rb
+
+class ApplicationRecord < ActiveRecord::Base
+end
+```
+
+ActiveRecord::Base クラスは ActiveModel::API モジュールを include している
+
+```ruby
+# rails/activerecord/lib/active_record/base.rb
+
+module ActiveRecord # :nodoc:
+  class Base
+    include ActiveModel::API
+    ...
+  end
+end
+```
+
+ActiveModel::API モジュールは ActiveModel::Validations モジュールを include している
+
+また ActiveSupport::Concern モジュールを extend している（ここで登場！）
+
+（つまり ActiveModel::API は concern ということ）
+
+```ruby
+# rails/activemodel/lib/active_model/api.rb
+
+module ActiveModel
+  module API
+    extend ActiveSupport::Concern
+    include ActiveModel::Validations
+  end
+end
+```
+
+ActiveModel::Validations モジュール内には ClassMethods モジュールが定義されており、そこで validates メソッドが定義されている
+
+```ruby
+# activemodel/lib/active_model/validations/validates.rb
+
+module ActiveModel
+  module Validations
+    module ClassMethods
+      def validates(*attributes)
+        defaults = attributes.extract_options!.dup
+        validations = defaults.slice!(*_validates_default_keys)
+
+        raise ArgumentError, "You need to supply at least one attribute" if attributes.empty?
+        raise ArgumentError, "You need to supply at least one validation" if validations.empty?
+
+        defaults[:attributes] = attributes
+
+        validations.each do |key, options|
+          key = "#{key.to_s.camelize}Validator"
+
+          begin
+            validator = const_get(key)
+          rescue NameError
+            raise ArgumentError, "Unknown validator: '#{key}'"
+          end
+
+          next unless options
+
+          validates_with(validator, defaults.merge(_parse_validates_options(options)))
+        end
+      end
+      ...
+    end
+  end
+end
+```
+
+これにより、ActiveModel::Validations::ClassMethods モジュールで定義された validates メソッドが Userクラスのクラスメソッドとして利用できるようになっているため、User モデルでクラスマクロとしてバリデーションを定義できるようになっている
+
+### ソースコードを読んでみる
+
+ここからは、ActiveSupport::Concern モジュールをメソッドごとに分解して詳細に見ていくことで「クラスメソッドを追加する機能をカプセル化して、モジュールを include した時にインスタンスメソッドだけではなく、クラスメソッドも取得できるようにする」機能をどのように実現しているのかを確認する
+
+まず、以下が ActiveSupport::Concern モジュールの全体像
+
+```ruby
+# rails/activesupport/lib/active_support/concern.rb
+
+module ActiveSupport
+  module Concern
+    class MultipleIncludedBlocks < StandardError # :nodoc:
+      def initialize
+        super "Cannot define multiple 'included' blocks for a Concern"
+      end
+    end
+
+    class MultiplePrependBlocks < StandardError # :nodoc:
+      def initialize
+        super "Cannot define multiple 'prepended' blocks for a Concern"
+      end
+    end
+
+    def self.extended(base) # :nodoc:
+      base.instance_variable_set(:@_dependencies, [])
+    end
+
+    def append_features(base) # :nodoc:
+      if base.instance_variable_defined?(:@_dependencies)
+        base.instance_variable_get(:@_dependencies) << self
+        false
+      else
+        return false if base < self
+        @_dependencies.each { |dep| base.include(dep) }
+        super
+        base.extend const_get(:ClassMethods) if const_defined?(:ClassMethods)
+        base.class_eval(&@_included_block) if instance_variable_defined?(:@_included_block)
+      end
+    end
+
+    def prepend_features(base) # :nodoc:
+      if base.instance_variable_defined?(:@_dependencies)
+        base.instance_variable_get(:@_dependencies).unshift self
+        false
+      else
+        return false if base < self
+        @_dependencies.each { |dep| base.prepend(dep) }
+        super
+        base.singleton_class.prepend const_get(:ClassMethods) if const_defined?(:ClassMethods)
+        base.class_eval(&@_prepended_block) if instance_variable_defined?(:@_prepended_block)
+      end
+    end
+
+    def included(base = nil, &block)
+      if base.nil?
+        if instance_variable_defined?(:@_included_block)
+          if @_included_block.source_location != block.source_location
+            raise MultipleIncludedBlocks
+          end
+        else
+          @_included_block = block
+        end
+      else
+        super
+      end
+    end
+
+    def prepended(base = nil, &block)
+      if base.nil?
+        if instance_variable_defined?(:@_prepended_block)
+          if @_prepended_block.source_location != block.source_location
+            raise MultiplePrependBlocks
+          end
+        else
+          @_prepended_block = block
+        end
+      else
+        super
+      end
+    end
+
+    def class_methods(&class_methods_module_definition)
+      mod = const_defined?(:ClassMethods, false) ?
+        const_get(:ClassMethods) :
+        const_set(:ClassMethods, Module.new)
+
+      mod.module_eval(&class_methods_module_definition)
+    end
+  end
+end
+```
+
+> 参考：https://github.com/rails/rails/blob/main/activesupport/lib/active_support/concern.rb
+
+### self.extended(base)
+
+```ruby
+def self.extended(base) # :nodoc:
+  base.instance_variable_set(:@_dependencies, [])
+end
+```
+
+ActiveSupport::Concern を extend した時、Ruby がベースクラスを引数にして self（ここでいうと ActiveSupport::Concern ）の [extended](https://docs.ruby-lang.org/ja/latest/method/Module/i/extended.html) というフックメソッドを呼び出す
+
+ここでは、concern（ソースコードでいうと base ） に対して [Object#instance_variable_set](https://docs.ruby-lang.org/ja/latest/method/Object/i/instance_variable_set.html) メソッドを使って @_dependencies クラスインタンス変数を空配列で定義している
+
+<Notice type="note">
+ポイント
+
+📝 concern に @_dependencies = [] を定義した
+
+📝 全ての concern は @_dependencies クラスインスタンス変数を持っている
+</Notice>
+
+
+### class_methods(&class_methods_module_definition)
+
+```ruby
+def class_methods(&class_methods_module_definition)
+  mod = const_defined?(:ClassMethods, false) ?
+    const_get(:ClassMethods) :
+    const_set(:ClassMethods, Module.new)
+
+  mod.module_eval(&class_methods_module_definition)
+end
+```
+
+concern に class_methods メソッドが定義されていた場合はこの処理が呼ばれる
+
+class_methods メソッドは引数としてブロックを Proc オブジェクトに変換して受け取る
+
+[Module#const_defined?](https://docs.ruby-lang.org/ja/latest/method/Module/i/const_defined=3f.html) メソッドで concern に ClassMethods という定数が存在するかを確認し、定数があれば [Module#const_get](https://docs.ruby-lang.org/ja/latest/method/Module/i/const_get.html) メソッドで定数の値を取得し、定数がなければ  [Module#const_set](https://docs.ruby-lang.org/ja/latest/method/Module/i/const_set.html) ****メソッドで ClassMethods というモジュールを定義する
+
+※ [Module#const_defined?](https://docs.ruby-lang.org/ja/latest/method/Module/i/const_defined=3f.html) メソッドの第二引数は inherit を boolean で指定する。false を指定するとスーパークラスや include したモジュールで定義された定数は対象に含まない
+
+次に [Module#module_eval](https://docs.ruby-lang.org/ja/latest/method/Module/i/class_eval.html) メソッドを使って ClassMethods モジュールのコンテキストで Procオブジェクト（class_methods_module_definition）をブロックに変換して評価する
+
+つまり、ブロックが ClassMethods モジュールのコンテキスト内で評価される
+
+```ruby
+# このように定義されていた場合...
+module M
+  extend ActiveSupport::Concern
+
+  class_methods do
+    def hoge
+      'M#hoge'
+    end
+  end
+end
+
+# 以下のように定義し直されるということ
+module M
+  module ClassMethods
+    def hoge
+      'M#hoge'
+    end
+  end
+end
+```
+
+<Notice type="note">
+ポイント
+
+📝 concern に ClassMethods モジュールを定義し、class_methods ブロックを ClassMethods モジュールのコンテキストとして評価した
+
+📝 concern 内で直接 ClassMethods モジュールが定義されている場合は、本メソッドは実行されない
+
+</Notice>
+
+
+### included(base = nil, &block)
+
+```ruby
+def included(base = nil, &block)
+  if base.nil?
+    if instance_variable_defined?(:@_included_block)
+      if @_included_block.source_location != block.source_location
+        raise MultipleIncludedBlocks
+      end
+    else
+      @_included_block = block
+    end
+  else
+    super
+  end
+end
+```
+
+included メソッドはベースクラスが concern を include したときにフックメソッドとして呼ばれる
+
+まずは、base が nil かどうかで条件分岐。base が nil の場合は後述の処理を、base が存在する場合はオーバーライドせず [Module#included](https://docs.ruby-lang.org/ja/latest/method/Module/i/included.html) を呼び出す
+
+base が nil 以外になるのは、以下のように concern が include された場合。この場合は M1 モジュールが base になるので、Module クラスの included メソッドが呼ばれる
+
+```ruby
+**module M2
+  include M1
+end**
+```
+
+base が nil になるのは、concern で以下のように呼び出しを行った場合
+
+```ruby
+**module M1
+  extend ActiveSupport::Concern
+
+  included do    
+    def hoge
+      puts "M#hoge"
+    end
+  end
+end**
+```
+
+この場合、まず [Object#instance_variable_defined?](https://docs.ruby-lang.org/ja/latest/method/Object/i/instance_variable_defined=3f.html) メソッドで @_included_block クラスインスタンス変数が定義されているかを確認
+
+定義されていない場合は、引数の Proc オブジェクトを @_included_block クラスインスタンス変数に代入
+
+定義されている場合は、[Proc#source_location](https://docs.ruby-lang.org/ja/latest/method/Proc/i/source_location.html) ****メソッドで @_included_block の Proc オブジェクトと引数の Proc オブジェクトを比較し、同一の定義ではない場合は included ブロックが複数設定されていると判断し例外を発生させる
+
+<Notice type="note">
+ポイント
+
+📝 concern に included ブロックが定義されている場合は @_included_block クラスインスタンス変数に Proc オブジェクトを代入した
+</Notice>
+
+
+### append_features(base)
+
+```ruby
+def append_features(base) # :nodoc:
+  if base.instance_variable_defined?(:@_dependencies)
+    base.instance_variable_get(:@_dependencies) << self
+    false
+  else
+    return false if base < self
+    @_dependencies.each { |dep| base.include(dep) }
+    super
+    base.extend const_get(:ClassMethods) if const_defined?(:ClassMethods)
+    base.class_eval(&@_included_block) if instance_variable_defined?(:@_included_block)
+  end
+end
+```
+
+append_features メソッドは Module クラスのインスタンスメソッドで、リファレンスでは「Module#include メソッドの実態」と表現されており、ベースクラスの継承チェーンにモジュールを追加する役割を担っている
+
+本メソッドは [Module#append_features](https://docs.ruby-lang.org/ja/latest/method/Module/i/append_features.html) メソッドをオーバーライドしているため、concern を include したときに呼ばれる
+
+まずは [Object#instance_variable_defined?](https://docs.ruby-lang.org/ja/latest/method/Object/i/instance_variable_defined=3f.html) メソッドで  ベースクラスに @_dependencies クラスインスタンス変数があるかどうかで条件分岐（= ベースクラスが concern かどうかを判定している）
+
+ベースクラスに @_dependencies が定義されている場合（= ベースクラスが concern の場合）、[Object#instance_variable_get](https://docs.ruby-lang.org/ja/latest/method/Object/i/instance_variable_get.html) ****メソッドで ベースクラスの @_dependencies (Array) を取得し、self を追加する
+
+concern に concern を include すると、クラスメソッドを読み込むべきクラスがずれてしまうため、この場合はベースクラスの継承チェーンに自身を追加する代わりに、@_dependencies に自身を追加することで依存管理を実現している
+
+ベースクラスに @_dependencies が定義されていない場合（= ベースクラスが concern ではない場合）、以下の処理を行なっている
+
+ベースクラスの継承チェーンに self が追加されている場合は二重のinclude を防ぐために false を返し、include を中止する（[Module#append_features](https://docs.ruby-lang.org/ja/latest/method/Module/i/append_features.html) が include の実態であるため super を呼び出さないと include は行われない）
+
+継承チェーンに追加されていない場合は処理を続行し、@_dependencies の配列に含まれるモジュールをベースクラスに再帰的に include していく
+
+その後、super で [Module#append_features](https://docs.ruby-lang.org/ja/latest/method/Module/i/append_features.html) メソッドを呼び出し、self をベースクラスの継承チェーンに追加する
+
+さらに、[Module#const_defined?](https://docs.ruby-lang.org/ja/latest/method/Module/i/const_defined=3f.html) メソッドで ClassMethods という定数が存在するかを確認し、定数があれば [Module#const_get](https://docs.ruby-lang.org/ja/latest/method/Module/i/const_get.html) メソッドで定数を取得し、ベースクラスに extend する
+
+さらに [Object#instance_variable_defined?](https://docs.ruby-lang.org/ja/latest/method/Object/i/instance_variable_defined=3f.html) メソッドで @_included_block クラスインスタンス変数が定義されているかを確認し、定義されている場合は [Module#class_eval](https://docs.ruby-lang.org/ja/latest/method/Module/i/class_eval.html) メソッドを使ってベースクラスのコンテキストで @_included_block の Procオブジェクトをブロックに変換して評価する
+
+以上のような処理でモジュールを include した時にインスタンスメソッドだけではなく、クラスメソッドも取得できるようにしている
+
+<Notice type="note">
+ポイント
+
+📝 ベースクラスが concern の場合、ベースクラスの @_dependencies に self を追加する
+
+📝 ベースクラスが concern では無い場合、self と @_dependencies の配列に含まれるモジュールをすべて include し、さらに ClassMethods モジュールを extend する
+
+📝 @_included_block が定義されている場合は、その内容もベースクラスのコンテキストで評価する
+</Notice>
+
+
+### prepended(base = nil, &block)
+
+```ruby
+def prepended(base = nil, &block)
+  if base.nil?
+    if instance_variable_defined?(:@_prepended_block)
+      if @_prepended_block.source_location != block.source_location
+        raise MultiplePrependBlocks
+      end
+    else
+      @_prepended_block = block
+    end
+  else
+    super
+  end
+end
+```
+
+prepended メソッドはベースクラスが concern を prepend したときにフックメソッドとして呼ばれる
+
+内容については included と同じなので割愛
+
+### prepend_features(base)
+
+```ruby
+def prepend_features(base) # :nodoc:
+  if base.instance_variable_defined?(:@_dependencies)
+    base.instance_variable_get(:@_dependencies).unshift self
+    false
+  else
+    return false if base < self
+    @_dependencies.each { |dep| base.prepend(dep) }
+    super
+    base.singleton_class.prepend const_get(:ClassMethods) if const_defined?(:ClassMethods)
+    base.class_eval(&@_prepended_block) if instance_variable_defined?(:@_prepended_block)
+  end
+end
+```
+
+prepend_features メソッドは Module クラスのインスタンスメソッドで、リファレンスでは「Module#prepend メソッドの実態」と表現されており、ベースクラスの継承チェーンの先頭にモジュールを追加する役割を担っている
+
+本メソッドは [Module#prepend_feature](https://docs.ruby-lang.org/ja/latest/method/Module/i/prepend_features.html)[s](https://docs.ruby-lang.org/ja/latest/method/Module/i/append_features.html) メソッドをオーバーライドしているため、concern を prepend したときに呼ばれる
+
+内容については append_features とほぼ同じなので割愛
+
+## おわりに
+
+「メタプログラミング Ruby」を読んで理解したつもりでも、いざ言語化してみると意外と理解できてなかったことに気づいた
+
+アウトプット大事！
