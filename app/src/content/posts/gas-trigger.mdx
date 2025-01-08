@@ -63,14 +63,16 @@ GAS のトリガーを スプレッドシートで設定できるようにする
 
 その際、名前は Trigger で設定してください
 
-```jsx
+```js
+
 // スクリプトID
 1zlDXTn3wploxPLKKBskw9XZYCSBVXa3ubw1bSEhjmilLSf2dv15LKNx5
 ```
 
 もし自分でライブラリ用の GAS を作成したい場合は以下を参考に作成してください
 
-```jsx
+```js
+
 // // --------------トリガー用スニペット---------------
 // Trigger.set(arguments.callee.name, ScriptApp, SheetId);
 // // -------------------------------------------
@@ -169,7 +171,8 @@ function getDayNumber_(day) {
 
 第3引数の sheetId には手順1で作成したスプレッドシートのシートIDを記入してください
 
-```jsx
+```js
+
 // --------------トリガー用スニペット---------------
 sheetId = 'xxxxxxxxxxxxxxxxxxxxxxx';
 Trigger.set(arguments.callee.name, ScriptApp, sheetId);
