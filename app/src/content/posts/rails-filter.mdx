@@ -1,0 +1,194 @@
+---
+title: "【Rails】子がいる親だけをフィルタリングする処理で N+1 が発生していたので改善する"
+image: "/images/post/post-3.jpg"
+date: 2024-09-06T13:00:00Z
+description: "ActiveSupport::Concernについてソースコードを見ながら解説しました！"
+categories: ["Rails"]
+tags: ["Ruby", "Rails", "N+1", "パフォーマンス改善"]
+type: "post"
+pickup: true
+---
+
+## はじめに
+
+下記のようなアソシエーション、スコープ、メソッドを持った Rails アプリケーションがあったとする
+
+```ruby
+class Question < ApplicationRecord
+  has_many :answers
+  has_many :popular_answers, -> { popular }, class_name: 'Answer'
+  has_one :best_answer
+  
+  scope :published, -> { where(is_published: true) }
+  
+  def has_best_answer?
+    BestAnswer.exists?(question_id: id)
+  end
+end
+
+class Answer < ApplicationRecord
+  belongs_to :question
+  
+  scope :popular, -> { where('like_count > 2').order(like_count: :desc) }
+end
+
+class BestAnswer < ApplicationRecord
+  belongs_to :answer
+  belongs_to :question
+end
+```
+
+このアプリケーションで下記の条件を満たす質問5件を取得したい
+
+- いいね数が2件以上の回答が存在する
+- ベストアンサーが存在する
+- 公開済み
+
+その際に filter メソッド内でクエリが発行されており N+1 が発生してしまっていた
+
+```ruby
+Question.published.filter { |question| question.popular_answers.exists? & question.has_best_answer? }.take(5)
+```
+
+```sql
+SELECT `questions`.* FROM `questions` WHERE `questions`.`is_published` = TRUE ORDER BY `questions`.`posted` DESC;
+
+SELECT 1 AS one FROM `answers` WHERE `answers`.`question_id` = 1 AND (like_count > 2) LIMIT 1; 
+SELECT 1 AS one FROM `best_answers` WHERE `best_answers`.`question_id` = 1 LIMIT 1;
+SELECT 1 AS one FROM `answers` WHERE `answers`.`question_id` = 2 AND (like_count > 2) LIMIT 1; 
+SELECT 1 AS one FROM `best_answers` WHERE `best_answers`.`question_id` = 2 LIMIT 1;
+SELECT 1 AS one FROM `answers` WHERE `answers`.`question_id` = 3 AND (like_count > 2) LIMIT 1; 
+SELECT 1 AS one FROM `best_answers` WHERE `best_answers`.`question_id` = 3 LIMIT 1;
+SELECT 1 AS one FROM `answers` WHERE `answers`.`question_id` = 4 AND (like_count > 2) LIMIT 1; 
+SELECT 1 AS one FROM `best_answers` WHERE `best_answers`.`question_id` = 4 LIMIT 1;
+SELECT 1 AS one FROM `answers` WHERE `answers`.`question_id` = 5 AND (like_count > 2) LIMIT 1; 
+SELECT 1 AS one FROM `best_answers` WHERE `best_answers`.`question_id` = 5 LIMIT 1; 
+```
+
+今回はこの N+1 を解消する方法を考えたい
+
+<Toc headings={getHeadings()} />
+
+## 先に結論
+
+子レコードが存在する親レコードだけをフィルタリングする際は INNER JOIN × DISTINCT ではなく EXISTS を使ったセミジョインで絞り込むのが良さそう
+
+## 内容
+
+### 実行環境
+
+- Ruby on Rails 7.1.3.4
+- MySQL 8.0
+
+### INNER JOIN × DISTINCT
+
+まず最初に試したのがこの方法
+
+```ruby
+Question.published.joins(:popular_answers, :best_answer).distinct.take(5)
+```
+
+この処理では以下のようなクエリが発行される
+
+```ruby
+SELECT
+	DISTINCT `questions` .*
+FROM
+	`questions`
+INNER JOIN `answers` ON
+	`answers`.`question_id` = `questions`.`id`
+	AND (like_count > 2)
+INNER JOIN `best_answers` ON
+	`best_answers`.`question_id` = `questions`.`id`
+WHERE
+	`questions`.`is_published` = TRUE
+LIMIT 5
+```
+
+この実装では has_many アソシエーションの answers テーブルを JOIN すると questions テーブルで大量の重複行が発生してしまうため distinct で重複行を排除しているが、このクエリでは Using temporary が発生しておりパフォーマンスが悪化してしまう恐れがある
+
+| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filteres | Extra |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | SIMPLE | best_answers |  | index | question_id | question_id | 4 |  | 3282 | 100 | Using index; Using temporary |
+| 1 | SIMPLE | questions |  | eq_ref | PRIMARY | PRIMARY | 4 | best_answers.question_id | 1 | 10 | Using where |
+| 1 | SIMPLE | answers |  | ref | question_id | question_id | 5 | best_answers.question_id | 3 | 33.33 | Using where; Distinct |
+
+rack-lineprof を見ると先ほどの filter の処理よりは改善できていることが確認できた
+
+![rack-mini-profilerの画像](/images/post/rack-mini-profiler.webp)
+
+### EXISTS によるセミジョイン
+
+次に試したのがこの方法
+
+```ruby
+Question.published.exists_popular_answers.exists_best_answer.take(5)
+
+class Question < ApplicationRecord
+  scope :exists_popular_answers, -> do
+    where(
+      'EXISTS (:answers)',
+      answers: Answer.where(
+        'answers.question_id = questions.id AND answers.like_count > 2'
+      )
+    )
+  end
+
+  scope :exists_best_answer, -> do
+    where(
+      'EXISTS (:best_answer)',
+      best_answer: BestAnswer.where(
+        'best_answers.question_id = questions.id'
+      )
+    )
+  end
+end
+```
+
+この処理では以下のようなクエリが発行される
+
+```sql
+SELECT
+	`questions` .*
+FROM
+	`questions`
+WHERE
+	`questions`.`is_published` = TRUE
+	AND (EXISTS (
+	SELECT
+		`answers` .*
+	FROM
+		`answers`
+	WHERE
+		(answers.question_id = questions.id
+			AND answers.like_count > 2)))
+	AND (EXISTS (
+	SELECT
+		`best_answers` .*
+	FROM
+		`best_answers`
+	WHERE
+		(best_answers.question_id = questions.id)))
+LIMIT 5;
+```
+
+この処理にすると questions レコードの重複行が発生しなくなり、DISTINCT の処理が不要になるため Using temporary も発生しない
+
+この場合はセミジョイン (FirstMatch(questions)) の処理になる
+
+
+| id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filteres | Extra |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | SIMPLE | best_answers |  | index | question_id | question_id | 4 |  | 3282 | 100 | Using index |
+| 1 | SIMPLE | questions |  | eq_ref | PRIMARY | PRIMARY | 4 | best_answers.question_id | 1 | 10 | Using where |
+| 1 | SIMPLE | answers |  | ref | question_id | question_id | 5 | best_answers.question_id | 3 | 33.33 | Using where; FirstMatch(questions) |
+
+ちなみにセミジョインの FirstMatch だと、questions を駆動表としてサブクエリ側のループを回しているときに１行でもマッチするものが見つかったら即座にサブクエリ側のループを打ち切って駆動表のループの次の周回に進むことができるため効率が良くなる
+
+rack-lineprof を見ると先ほどの INNER JOIN × DISTINCT の処理よりは改善できていることが確認できた
+
+![rack-mini-profilerの画像](/images/post/rack-mini-profiler-2.webp)
+
+## まとめ
+
+子レコードが存在する親レコードだけをフィルタリングする際は INNER JOIN × DISTINCT ではなく EXISTS を使ったセミジョインで絞り込むのが良さそう

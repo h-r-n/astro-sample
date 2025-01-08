@@ -1,0 +1,191 @@
+---
+title: "【GAS】GASのトリガーをスプレッドシートで設定できるようにする"
+image: "/images/post/post-3.jpg"
+date: 2024-09-14T14:50:00Z
+description: "ActiveSupport::Concernについてソースコードを見ながら解説しました！"
+categories: ["GAS"]
+tags: ["GAS", "GoogleApps Script"]
+type: "post"
+pickup: true
+---
+
+## 概要
+
+Google Apps Script（以下 GAS）はトリガーを使うことでスクリプトを定期実行することができます
+
+しかし、GAS のトリガーにはいくつか課題があります
+
+そんな課題に対応するために自作ライブラリを作成し、GAS のトリガーをスプレッドシートで設定できるようにしました
+
+ライブラリを使いスプレッドシートでトリガー設定することで以下のことが可能になります
+
+- トリガーを設定した本人以外もトリガーの内容について確認できる
+- トリガーの発火時刻を正確な時間で設定できる
+
+## 課題
+
+いつどのタイミングでトリガーを設定しているかコードを書いた本人以外わからない
+
+-> トリガーは作成したユーザーに紐付くため他のメンバーが詳細を見ることができない
+
+トリガーで正確な時間設定ができない
+
+-> 日次、週次、月次など定期的に走るトリガーは○時〜○時など1時間単位でしか指定できず、いつ発火するか正確な時間がわからない
+
+## 解決策
+
+GAS のトリガーを スプレッドシートで設定できるようにする GAS ライブラリを作成しました
+
+定時実行したい GAS に本ライブラリを導入した後、スプレッドシートで関数と日時を設定し初回のみ手動で実行したらその後は希望の日時で定期実行されるようになります
+
+詳細については以下で説明します
+
+## 設定方法
+
+### 1. スプレッドシートを作成する
+
+トリガーの定期実行を管理するスプレッドシートを作成してください
+
+その際、以下のルールに従ってシートを作成してください
+
+- シート名は「trigger」にする
+- A列は「関数名」、B列は「頻度」、C列は「曜日/日付」、D列は「時」、E列は「分」を記入してください（※ヘッダーはあってもなくてもOK）
+- A列には定期実行したい GAS の関数名を指定する
+- B列には日次であれば「everyDay」週次であれば「everyWeek」月次であれば「everyMonth」を指定する
+- C列には日次であれば未記入、週次であれば曜日を、月次であれば月を数字で指定する（※入力方法は添付の画像を参考にしてください）
+- D列、E列には定期実行したい時間と分を指定する
+
+![gas-triggerの画像](/images/post/gas-trigger.webp)
+
+### 2. 対象の GAS にライブラリを導入する
+
+対象の GAS に以下のライブラリを導入してください
+
+その際、名前は Trigger で設定してください
+
+```jsx
+// スクリプトID
+1zlDXTn3wploxPLKKBskw9XZYCSBVXa3ubw1bSEhjmilLSf2dv15LKNx5
+```
+
+もし自分でライブラリ用の GAS を作成したい場合は以下を参考に作成してください
+
+```jsx
+// // --------------トリガー用スニペット---------------
+// Trigger.set(arguments.callee.name, ScriptApp, SheetId);
+// // -------------------------------------------
+
+function set(funcName, scriptApp, sheetId) {
+  // 定数
+  SHEET_ID = sheetId;
+  SHEET_NAME = 'trigger';
+  COLUMN_A = 1;
+
+  // 既存のトリガーを削除する
+  deleteSetTrigger_(funcName, scriptApp);
+
+  const sheet = getSheet_(SHEET_ID, SHEET_NAME);
+  const row = findRow_(sheet, funcName, COLUMN_A);
+
+  const frequency = sheet.getRange(`B${row}`).getValue();
+  const dateOrDay = sheet.getRange(`C${row}`).getValue();
+  const hour = sheet.getRange(`D${row}`).getValue();
+  const min = sheet.getRange(`E${row}`).getValue();
+
+  let date = new Date();
+  // 毎日設定するトリガーの場合
+  if (frequency === 'everyDay') {
+    date.setDate(date.getDate() + 1); // 翌日のトリガーを設定する
+    date.setHours(hour);
+    date.setMinutes(min);
+    scriptApp.newTrigger(`${funcName}`).timeBased().at(date).create();
+  };
+
+  // 毎週設定するトリガーの場合
+  if (frequency === 'everyWeek') {
+    const dayNumber = getDayNumber_(dateOrDay);
+    date.setDate(date.getDate() + 7 - date.getDay() + dayNumber);
+    date.setHours(hour);
+    date.setMinutes(min);
+    scriptApp.newTrigger(`${funcName}`).timeBased().at(date).create();
+  }
+
+  // 毎月設定するトリガーの場合
+  if (frequency === 'everyMonth') {
+    date.setMonth(date.getMonth() + 1);
+    date.setDate(dateOrDay);
+    date.setHours(hour);
+    date.setMinutes(min);
+    scriptApp.newTrigger(`${funcName}`).timeBased().at(date).create();
+  }
+}
+
+function deleteSetTrigger_(funcName, scriptApp) {
+  const triggers = scriptApp.getProjectTriggers();
+  for(let i=0; i<triggers.length; i++){
+    if(triggers[i].getHandlerFunction() === `${funcName}`){
+      scriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+}
+
+function findRow_(sheet,val,col) {
+  const data = sheet.getDataRange().getValues();
+
+  for(let i=1; i<data.length; i++){
+    if(data[i][col-1] === val){
+      return i+1;
+    }
+  }
+  return 0; 
+}
+
+function getSheet_(sheetId, sheetName) {
+  const spreadSheet = SpreadsheetApp.openById(sheetId);
+  const sheet = spreadSheet.getSheetByName(sheetName);
+
+  return sheet;
+}
+
+// 曜日の数値を返却する（日曜日:0、土曜日:6）
+function getDayNumber_(day) {
+  const dayNumbers = {
+    'Sunday': 0,
+    'Monday': 1,
+    'Tuesday': 2,
+    'Wednesday': 3,
+    'Thursday': 4,
+    'Friday': 5,
+    'Saturday': 6,
+  };
+
+  return dayNumbers[day];
+}
+```
+
+### 3. GAS にスニペットを貼り付ける
+
+ライブラリを導入したら対象の GAS 関数の最後の方に以下のスニペットを貼り付けてください
+
+第3引数の sheetId には手順1で作成したスプレッドシートのシートIDを記入してください
+
+```jsx
+// --------------トリガー用スニペット---------------
+sheetId = 'xxxxxxxxxxxxxxxxxxxxxxx';
+Trigger.set(arguments.callee.name, ScriptApp, sheetId);
+// -------------------------------------------
+```
+
+初回のみ手動で実行したらその後はスプレッドシートで設定した日時で定期実行されるようになります
+
+## 成果
+
+実際に GAS トリガーをスプレッドシートで管理することで以下の成果を得ることができました
+
+- ブラックボックス化していたトリガーの内容をチーム間で共有できるようになった
+- トリガーの発火時刻を正確な時間で設定できるようになった
+- トリガーを設定した本人以外も発火時間の編集ができるようになり、属人化を防ぐことができるようになった
+
+## おわりに
+
+GAS トリガーの管理に課題を抱えている方のお役に立てたら幸いです！

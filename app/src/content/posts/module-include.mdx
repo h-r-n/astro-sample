@@ -1,0 +1,112 @@
+---
+title: "【Ruby】Module#includeとは"
+image: "/images/post/post-3.jpg"
+date: 2024-04-20T00:02:00Z
+description: "ActiveSupport::Concernについてソースコードを見ながら解説しました！"
+categories: ["Ruby"]
+tags: ["Ruby", "Rails"]
+type: "post"
+pickup: true
+---
+
+## Module#includeとは
+
+Module#includeとは、Rubyの組み込みライブラリに含まれるModuleクラスのインスタンスメソッド
+
+引数で指定したモジュールの定義 (メソッド、定数) を引き継ぐことができる
+
+多重継承の代わりに用いられておりmix-inとも呼ばれている
+
+モジュールの機能追加は、クラスの継承関係の間にそのモジュールが挿入されることで実現されている
+
+そのため、メソッド探索などはスーパークラスよりもインクルードされたモジュールのほうが先に行われる
+
+```ruby
+module M
+  def hoge
+    puts "M#hoge"
+  end
+end
+
+class C1; end
+
+class C2 < C1
+  include M
+end
+
+# 指定されたモジュールの定義 (メソッド、定数) を引き継ぐことができる
+C2.new.hoge
+# => M#hoge
+
+# モジュールの機能追加は、クラスの継承関係の間にそのモジュールが挿入されることで実現されている
+p C2.ancestors 
+# => [C2, M, C1, Object, Kernel, BasicObject]
+```
+
+```ruby
+module M
+  def hoge
+    puts "M#hoge"
+  end
+end
+
+class C1
+  def hoge
+    puts "C1#hoge"
+  end
+end
+
+class C2 < C1
+  include M
+end
+
+# メソッド探索などはスーパークラスよりもインクルードされたモジュールのほうが先に行われる
+C2.new.hoge
+# => M#hoge
+```
+
+## 引数について
+
+引数は可変長引数なので配列として受け取られるため複数モジュール指定可能
+
+**`include(*mod) -> self`**
+
+引数に複数のモジュールを指定した場合、最後の引数から順にインクルードする
+
+同じモジュールを二回以上includeした場合、二回目以降は無視される
+
+```ruby
+class C2 < C1
+  include M1, M2
+end
+
+p C2.ancestors
+# => [C2, M1, M2, C1, Object, Kernel, BasicObject]
+```
+
+## Module#includeの実態
+
+Module#includeの実態はModuleクラスのappend_featuresインスタンスメソッド
+
+includeメソッドはRubyで書くと以下のように定義できる
+
+Module#append_features → モジュール（またはクラス）に self の機能を追加する
+
+Module#included → self が include されたときに対象のクラスまたはモジュールを引数にしてインタプリタがこのメソッドを呼び出す（フックメソッド）
+
+```ruby
+def include(*modules)
+  modules.reverse_each do |mod|
+    # append_featuresやincluded はプライベートメソッドなので
+    # 直接 mod.append_features(self) とは書けない
+    mod.__send__(:append_features, self)
+    mod.__send__(:included, self)
+  end
+end
+```
+
+> 参考：https://docs.ruby-lang.org/ja/latest/method/Module/i/append_features.html
+
+Module#includedメソッドはフックメソッドのため通常はメソッドの中身はなく、オーバーライドして使うもの
+
+一方で、Module#append_featuresはメソッドは、実際に継承チェーンにモジュールを追加する

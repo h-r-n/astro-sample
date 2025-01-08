@@ -1,0 +1,103 @@
+---
+title: "【Ruby】Module#prependとは"
+image: "/images/post/post-3.jpg"
+date: 2024-04-20T00:02:00Z
+description: "ActiveSupport::Concernについてソースコードを見ながら解説しました！"
+categories: ["Ruby"]
+tags: ["Ruby", "Rails"]
+type: "post"
+pickup: true
+---
+
+## Module#prependとは
+
+Module#prependとは、Rubyの組み込みライブラリに含まれるModuleクラスのインスタンスメソッド
+
+引数で指定したモジュールを self の継承チェーンの先頭に追加することで self の定義 (メソッド、定数) を上書きする
+
+prependの引数として渡したモジュールのインスタンスメソッドでsuperを呼ぶことで self のモジュール/クラスのメソッドを呼び出すことができる
+
+引数で指定したモジュールは後ろから順に処理されるため、 modules の先頭が最も優先される
+
+```ruby
+module M1
+  def foo
+    puts "M1#foo(1)"
+    super
+    puts "M1#foo(2)"
+  end
+end
+
+class C1
+  prepend M1
+
+  def foo
+    puts "C1#foo"
+  end
+end
+
+# prependの引数として渡したモジュールのインスタンスメソッドでsuperを呼ぶことで self のモジュール/クラスのメソッドを呼び出すことができる
+C1.new.foo
+# => M1#foo(1)
+# C1#foo
+# M1#foo(2)
+```
+
+```ruby
+module M2
+  def foo
+    puts "M2#foo(1)"
+    super
+    puts "M2#foo(2)"
+  end
+end
+
+class C2
+  prepend M1, M2
+  def foo
+    puts "C2#foo"
+  end
+end
+
+# 引数で指定したモジュールは後ろから順に処理されるため、 modules の先頭が最も優先される
+C2.new.foo
+# => M1#foo(1)
+# M2#foo(1)
+# C2#foo
+# M1#foo(2)
+# M2#foo(2)
+```
+
+## 引数について
+
+引数は可変長引数なので配列として受け取られるため複数モジュール指定可能
+
+`prepend(*modules) -> self`
+
+引数に複数のモジュールを指定した場合、最後の引数から順に prepend する
+
+## Module#prependの実態
+
+Module#prependの実態はModuleクラスのprepend_featuresインスタンスメソッド
+
+prependメソッドはRubyで書くと以下のように定義できる
+
+- Module#prepend_features →  引数で指定したモジュール（またはクラス）の継承チェーンの先頭に self を追加する
+- Module#prepend → self が prepend されたときに対象のクラスまたはモジュールを引数にしてインタプリタがこのメソッドを呼び出す（フックメソッド）
+
+```ruby
+def include(*modules)
+  modules.reverse_each do |mod|
+    # prepend_featuresやprepend はプライベートメソッドなので
+    # 直接 mod.prepend_features(self) とは書けない
+    mod.__send__(:prepend_features, self)
+    mod.__send__(:prepended, self)
+  end
+end
+```
+
+> 参考：https://docs.ruby-lang.org/ja/latest/method/Module/i/prepend_features.html
+
+Module#prependedメソッドはフックメソッドのため通常はメソッドの中身はなく、オーバーライドして使うもの
+
+一方で、Module#prepend_featuresはメソッドは、実際に継承チェーンの先頭にモジュールを追加する

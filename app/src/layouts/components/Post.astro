@@ -18,13 +18,13 @@ const { post } = Astro.props;
       <div class="p-3">
         <h2 class="mb-2 text-base font-bold">{post.data.title}</h2>
         <div class="items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
-          <time class="text-[11px] flex flex-wrap gap-x-1 items-center text-light" datetime={dateFormat(post.data.date, "yyyy-MM-dd")} aria-hidden="true">
+          <time class="text-[11px] flex flex-wrap gap-x-1 items-center opacity-75" datetime={dateFormat(post.data.date, "yyyy-MM-dd")} aria-hidden="true">
             <BiRevision />
             <span class="text-[11px]">{dateFormat(post.data.date)}</span>
           </time>
         </div>
       </div>
-      <span class="absolute top-2.5 left-2.5 bg-body px-3 py-1 text-[11px] rounded-full">{post.data.categories[0]}</span>
+      <span class="absolute top-2.5 left-2.5 bg-body px-3 py-1 text-[11px] rounded-full opacity-80">{post.data.categories[0]}</span>
     </div>
   </a>
 </li>

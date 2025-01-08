@@ -3,7 +3,7 @@ import Social from "./Social.astro";
 import social from "@/config/social.json";
 ---
 
-<div class="card">
+<section class="card mb-6 shadow bg-white pb-4 relative">
   <header class="bg-primary-check">
     <div class="avatar">
       <img src="https://randomuser.me/api/portraits/men/3.jpg" alt="profile" />
@@ -11,24 +11,21 @@ import social from "@/config/social.json";
   </header>
 
   <div class="name">nanashi</div>
-  <div class="desc">
+  <div class="px-4 pb-4 text-[15px] opacity-75">
     Lorem ipsum dolor sit amet, consectetur adipisicing elit et cupiditate deleniti.
   </div>
   <div class="w-full rounded flex items-center justify-center gap-1">
-    <Social source={social} className="social-icons sm" />
+    <Social source={social} className="social-icons-sm" />
   </div>
-</div>
+</section>
 
 <style>
 /* 暫定的にここにスタイルを置く */
-.card{
-  @apply mb-6 shadow bg-white pb-4;
-  position: relative;
-  
-  header{
+.card {  
+  header {
     position: relative;
     height: 90px;
-    .avatar{
+    .avatar {
       position: absolute;
       left: 50%;
       top: 30px;
@@ -40,7 +37,7 @@ import social from "@/config/social.json";
       overflow: hidden;
       background: #ccc;
       border:3px solid #fff;
-      img{
+      img {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -55,11 +52,11 @@ import social from "@/config/social.json";
     }
   }
 
-  .name{
+  .name {
     position: relative;
     margin: 50px 0 30px;
     text-align: center;
-    &::after{
+    &::after {
       content: '';
       position: absolute;
       bottom: -15px;
@@ -69,12 +66,6 @@ import social from "@/config/social.json";
       height: 1px;
       background: #000;
     }
-  }
-  .desc{
-    padding: 0 1rem 1rem;
-    text-align: center;
-    line-height: 1.5;
-    color: #777;
   }
 }
 </style>

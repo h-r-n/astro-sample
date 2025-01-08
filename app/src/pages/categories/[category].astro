@@ -29,7 +29,7 @@ const totalPages = Math.ceil(filterByTags.length / pagination);
 
 <Base title={category as any}>
   <!-- Blogs -->
-  <div class="section p-2.5 lg:p-8 shadow sm:p-[60px] bg-white">
+  <section class="section p-2.5 lg:p-8 shadow sm:p-[60px] bg-white">
     <div class="container row">
       <div class="text-center border-b-2 border-primary mb-12 px-0">
         <div class="top-title-icon">
@@ -43,6 +43,6 @@ const totalPages = Math.ceil(filterByTags.length / pagination);
       <Posts posts={filterByTags} />
       <Pagination section={`categories/${category}`} currentPage={1} totalPages={totalPages} />
     </div>
-  </div>
+  </section>
   <!-- ./End Blogs -->
 </Base>
