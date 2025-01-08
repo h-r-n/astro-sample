@@ -3,11 +3,14 @@ import { settings } from "@/config/config.json";
 import Post from "./Post.astro";
 
 const { posts } = Astro.props;
+const currentPath = new URL(Astro.request.url).pathname;
+const isHome = currentPath === '/';
+const pagination = isHome ? settings.home_pagination : settings.pagination;
 ---
 
 <ul class="row sm:gx-3 gx-2 mb-4">
   {
-    posts.slice(0, settings.pagination).map((post) => (
+    posts.slice(0, pagination).map((post) => (
       <Post post={post} />
     ))
   }
