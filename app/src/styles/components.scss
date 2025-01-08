@@ -134,7 +134,7 @@
   @apply prose-h1:text-h1-prose-sm sm:prose-h1:text-h1-prose;
   @apply prose-h2:bg-primary-check prose-h2:text-h2-prose-sm sm:prose-h2:text-h2-prose prose-h2:text-white prose-h2:pt-2 prose-h2:px-4 prose-h2:pb-1 prose-h2:sm:pb-1.5 prose-h2:relative prose-h2:sm:mt-20 prose-h2:sm:mb-12 prose-h2:mt-12 prose-h2:mb-8;
   @apply prose-h2:after:bg-primary prose-h2:after:content-[''] prose-h2:after:w-full prose-h2:after:h-[3px] prose-h2:after:absolute prose-h2:after:bottom-[-6px] prose-h2:after:left-0;
-  @apply prose-h3:text-h3-prose-sm sm:prose-h3:text-h3-prose prose-h3:my-6 sm:prose-h3:my-8 prose-h3:px-[0.3em] prose-h3:pt-[0.3em] prose-h3:border-b-2 prose-h3:border-solid prose-h3:border-primary prose-h3:first-letter:text-[1.5em] prose-h3:first-letter:text-primary;
+  @apply prose-h3:text-h3-prose-sm sm:prose-h3:text-h3-prose sm:prose-h3:mt-16 prose-h3:mt-12 sm:prose-h3:mb-12 prose-h3:mb-8 prose-h3:px-[0.3em] prose-h3:pt-[0.3em] prose-h3:border-b-2 prose-h3:border-solid prose-h3:border-primary prose-h3:first-letter:text-[1.5em] prose-h3:first-letter:text-primary;
   @apply prose-hr:border-border;
   @apply prose-p:sm:text-base prose-p:text-text prose-p:text-sm prose-p:mt-0 prose-p:mb-7 sm:prose-p:mb-8;
   @apply prose-blockquote:border-primary prose-blockquote:bg-theme-light prose-blockquote:py-1 prose-blockquote:px-4;
@@ -219,6 +219,6 @@
   transition: 0.2s ease-in-out;
 
   &:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 }
