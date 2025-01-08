@@ -58,12 +58,12 @@
       }
     }
   }
-  &.sm {
-    @apply space-x-2;
+  &-sm {
+    @apply space-x-1;
     li {
       @apply inline-block;
       a {
-        @apply block h-6 w-6 rounded-full border border-primary bg-white text-center text-primary transition-all duration-300 hover:bg-primary hover:text-white;
+        @apply block h-6 w-6 text-center text-primary tag-transition;
         svg {
           @apply m-auto h-6;
         }
