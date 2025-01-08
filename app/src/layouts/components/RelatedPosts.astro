@@ -11,10 +11,15 @@ const sortPostByDate = sortByDate(posts);
 const relatedPosts = similerItems(post, sortPostByDate, post.slug);
 ---
 
-<ul class="row sm:gx-3 gx-2">
-  {
-    relatedPosts.slice(0, 5).map((post) => (
-      <RelatedPost post={post} />
-    ))
-  }
-</ul>
+{relatedPosts.length > 0 && (
+  <div class="mb-6 sm:mb-7 text-base sm:text-xl font-bold border-l-8 border-primary border-double py-[0.3em] px-[0.5em]">
+    関連記事
+  </div>
+  <ul class="row sm:gx-3 gx-2">
+    {
+      relatedPosts.slice(0, 5).map((post) => (
+        <RelatedPost post={post} />
+      ))
+    }
+  </ul>
+)}
