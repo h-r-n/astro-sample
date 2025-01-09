@@ -7,6 +7,7 @@ import { defineConfig } from "astro/config";
 import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
 import config from "./src/config/config.json";
+import { rehypeTableWrap } from './src/plugins/rehypeTableWrap'
 
 // https://astro.build/config
 export default defineConfig({
@@ -42,6 +43,9 @@ export default defineConfig({
           test: "Table of contents",
         },
       ],
+    ],
+    rehypePlugins: [
+      rehypeTableWrap,
     ],
     shikiConfig: {
       theme: "one-dark-pro",

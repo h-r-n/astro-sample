@@ -127,6 +127,11 @@
   @apply border-border focus:border-primary focus:ring-transparent;
 }
 
+// table style
+.table-wrapper {
+  @apply overflow-x-auto my-8;
+}
+
 // content style
 .content {
   @apply prose max-w-none;
@@ -159,11 +164,14 @@
   @apply prose-ul:p-5;
   @apply prose-ol:p-5;
   @apply prose-li:mt-2.5 prose-li:text-sm prose-li:sm:text-base;
-
-  @apply prose-table:overflow-hidden prose-table:border prose-table:border-border;
-  @apply prose-thead:border-border prose-thead:bg-theme-light prose-th:py-4 prose-th:px-4 prose-th:text-dark;
-  @apply prose-tr:border-border;
-  @apply prose-td:px-3 prose-td:py-4;
+  @apply prose-table:border-collapse prose-table:m-0;
+  @apply prose-th:py-2 prose-th:px-4 prose-th:text-center prose-th:border prose-th:border-solid prose-th:border-primary prose-th:bg-primary-check prose-th:text-white prose-th:border-r-white prose-th:border-t-primary;
+  @apply prose-td:py-2 prose-td:px-4 prose-td:text-center prose-td:border prose-td:border-solid prose-td:border-primary;
+  th {
+    &:last-child {
+      border-right: 1px solid #156ea4;
+    }
+  }
   
   // デフォルトの表記はこちら
   // @apply prose max-w-none;
