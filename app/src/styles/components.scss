@@ -84,6 +84,12 @@
     // Notice内ではリストは余白なし
     @apply m-0 py-0;
   }
+  p {
+    // Notice内では最後の段落は余白なし
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 
   &.note {
     @apply bg-[#f1f8ff];
