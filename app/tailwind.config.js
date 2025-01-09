@@ -69,6 +69,8 @@ module.exports = {
         "h3-prose": 20 + "px",
         "h3-prose-sm": 16 + "px",
         h4: h4 + "rem", // 25px
+        "h4-prose": 18 + "px",
+        "h4-prose-sm": 15 + "px",
         h5: h5 + "rem", // 1.25rem(20px)
         h6: h6 + "rem", // 1rem(16px)
         'xs-fit': ['12px', '12px'],
