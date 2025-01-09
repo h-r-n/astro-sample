@@ -7,6 +7,7 @@ import type { PostData } from "@/types";
 import AroundPost from "./components/AroundPost.astro";
 import RelatedPosts from "./components/RelatedPosts.astro";
 import Toc from "./components/Toc.astro";
+import Spacer from "./components/Spacer.astro";
 import LinkCard from "./components/LinkCard.astro";
 
 const { post } = Astro.props;
@@ -62,7 +63,8 @@ const blogDate = dateBlogFormat(date);
           <div class="content mb-16 text-left">
             <Content components={{
               Toc,
-              LinkCard
+              LinkCard,
+              Spacer,
             }} />
             <!-- <Markdown content={post.body} components={shortcodes} /> -->
           </div>
