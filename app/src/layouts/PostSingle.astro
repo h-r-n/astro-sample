@@ -11,9 +11,10 @@ import Spacer from "./components/Spacer.astro";
 import LinkCard from "./components/LinkCard.astro";
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, remarkPluginFrontmatter } = await post.render();
 const { title, categories, image, date, tags }: PostData = post.data;
 const blogDate = dateBlogFormat(date);
+const minutesRead = Math.ceil(remarkPluginFrontmatter.minutesRead)
 ---
 
 <section class="section">
@@ -56,10 +57,13 @@ const blogDate = dateBlogFormat(date);
                 height={500}
                 width={1000}
                 alt={title}
-                class="mb-8"
+                class="mb-4"
               />
             )
           }
+          <div class="items-center sm:text-xs text-[11px] underline mb-8 text-right">
+            この記事は<span class="sm:text-sm text-xs text-primary font-bold">約{minutesRead}分</span>で読めます
+          </div>
           <div class="content mb-16 text-left">
             <Content components={{
               Toc,
