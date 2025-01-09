@@ -74,45 +74,46 @@
 
 // notice
 .notice {
-  .notice-body {
-    p {
-      @apply my-0 text-[#666666];
-    }
+  @apply my-8 p-6;
+
+  .notice-head {
+    @apply flex items-center text-base-fit font-bold mb-4;
+  }
+
+  ul, ol {
+    // Notice内ではリストは余白なし
+    @apply m-0 py-0;
   }
 
   &.note {
+    @apply bg-[#f1f8ff];
+
     .notice-head {
-      @apply bg-primary;
-    }
-    .notice-body {
-      @apply bg-[#f1f8ff];
+      @apply text-primary;
     }
   }
 
   &.tip {
+    @apply bg-[#e2ffe2];
+
     .notice-head {
-      @apply bg-[#78c578];
-    }
-    .notice-body {
-      @apply bg-[#e2ffe2];
+      @apply text-[#78c578];
     }
   }
 
   &.info {
+    @apply bg-[#ffedde];
+
     .notice-head {
-      @apply bg-[#f0b37e];
-    }
-    .notice-body {
-      @apply bg-[#ffedde];
+      @apply text-[#f0b37e];
     }
   }
 
   &.warning {
+    @apply bg-[#ffdad8];
+    
     .notice-head {
-      @apply bg-[#e06f6c];
-    }
-    .notice-body {
-      @apply bg-[#ffdad8];
+      @apply text-[#e06f6c];
     }
   }
 }

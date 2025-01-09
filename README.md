@@ -18,3 +18,9 @@
 ```mdx
 <Spacer />
 ```
+
+### Noticeを入れたい
+Noticeを入れたい箇所に以下のタグを挿入する
+```mdx
+<Notice type="note" title="ここにタイトルを入力する">This is a simple note.</Notice>
+```
