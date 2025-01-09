@@ -74,10 +74,10 @@
 
 // notice
 .notice {
-  @apply my-8 p-6;
+  @apply my-8 p-6 text-sm sm:text-base;
 
   .notice-head {
-    @apply flex items-center text-base-fit font-bold mb-4;
+    @apply flex items-center sm:text-base-fit text-sm-fit font-bold mb-4;
   }
 
   ul, ol {
@@ -165,8 +165,8 @@
   @apply prose-pre:rounded-none;
   @apply prose-strong:text-dark;
   @apply prose-a:text-primary prose-a:no-underline hover:prose-a:underline;
-  @apply prose-ul:p-5;
-  @apply prose-ol:p-5;
+  @apply prose-ul:px-5;
+  @apply prose-ol:px-5;
   @apply prose-li:mt-2.5 prose-li:text-sm prose-li:sm:text-base;
   @apply prose-table:border-collapse prose-table:m-0;
   @apply prose-th:py-2 prose-th:px-4 prose-th:text-center prose-th:border prose-th:border-solid prose-th:border-primary prose-th:bg-primary-check prose-th:text-white prose-th:border-r-white prose-th:border-t-primary;
