@@ -1,5 +1,6 @@
 ---
 import { markdownify } from "@/lib/utils/textConverter";
+import Spacer from "./components/Spacer.astro";
 
 const { data } = Astro.props;
 const { title } = data.data;
@@ -10,7 +11,9 @@ const { Content } = await data.render();
   <div class="container">
     <h1 set:html={markdownify(title)} class="index-title" />
     <div class="content">
-      <Content />
+      <Content components={{
+        Spacer
+      }} />
     </div>
   </div>
 </div>

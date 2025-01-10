@@ -31,10 +31,12 @@ Using temporary と Using filesort は内部表でソートをした場合に表
 
 MySQL のドキュメントにはそれぞれ以下のように記載されている
 
-> ・Using filesort (JSON プロパティ): using_filesort )
+> ・Using filesort (JSON プロパティ): using_filesort
+> 
 > MySQL はソート順で行を取得する方法を見つけるために、追加のパスを実行する必要があります。 ソートは、結合型に従ってすべての行を進み、ソートキーと WHERE 句に一致するすべての行について行へのポインタを格納して実行されます。 次にキーがソートされ、ソート順で行が取得されます。 [セクション8.2.1.16「ORDER BY の最適化」](https://dev.mysql.com/doc/refman/8.0/ja/order-by-optimization.html)を参照してください。
 >
-> ・Using temporary (JSON プロパティ): using_temporary_table )
+> ・Using temporary (JSON プロパティ): using_temporary_table 
+>
 > クエリーを解決するために、MySQL は結果を保持する一時テーブルを作成する必要があります。 これは一般に、クエリーに、カラムを異なって一覧表示する GROUP BY 句と ORDER BY 句が含まれる場合に発生します。
 >
 > 引用元：https://dev.mysql.com/doc/refman/8.0/ja/explain-output.html

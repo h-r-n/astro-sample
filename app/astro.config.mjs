@@ -7,6 +7,8 @@ import { defineConfig } from "astro/config";
 import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
 import config from "./src/config/config.json";
+import { rehypeTableWrap } from './src/plugins/rehypeTableWrap'
+import { remarkReadingTime } from "./src/plugins/remarkReadingTime";
 
 // https://astro.build/config
 export default defineConfig({
@@ -29,6 +31,7 @@ export default defineConfig({
         "@/shortcodes/Notice",
         "@/shortcodes/Video",
         "@/shortcodes/Youtube",
+        "@/shortcodes/Conversation",
       ],
     }),
     mdx(),
@@ -36,12 +39,16 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [
       remarkToc,
+      remarkReadingTime,
       [
         remarkCollapse,
         {
           test: "Table of contents",
         },
       ],
+    ],
+    rehypePlugins: [
+      rehypeTableWrap,
     ],
     shikiConfig: {
       theme: "one-dark-pro",

@@ -74,45 +74,52 @@
 
 // notice
 .notice {
-  .notice-body {
-    p {
-      @apply my-0 text-[#666666];
+  @apply my-8 p-6 text-sm sm:text-base;
+
+  .notice-head {
+    @apply flex items-center sm:text-base-fit text-sm-fit font-bold mb-4;
+  }
+
+  ul, ol {
+    // Notice内ではリストは余白なし
+    @apply m-0 py-0;
+  }
+  p {
+    // Notice内では最後の段落は余白なし
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 
   &.note {
+    @apply bg-[#f1f8ff];
+
     .notice-head {
-      @apply bg-primary;
-    }
-    .notice-body {
-      @apply bg-[#f1f8ff];
+      @apply text-primary;
     }
   }
 
   &.tip {
+    @apply bg-[#e2ffe2];
+
     .notice-head {
-      @apply bg-[#78c578];
-    }
-    .notice-body {
-      @apply bg-[#e2ffe2];
+      @apply text-[#78c578];
     }
   }
 
   &.info {
+    @apply bg-[#ffedde];
+
     .notice-head {
-      @apply bg-[#f0b37e];
-    }
-    .notice-body {
-      @apply bg-[#ffedde];
+      @apply text-[#f0b37e];
     }
   }
 
   &.warning {
+    @apply bg-[#ffdad8];
+    
     .notice-head {
-      @apply bg-[#e06f6c];
-    }
-    .notice-body {
-      @apply bg-[#ffdad8];
+      @apply text-[#e06f6c];
     }
   }
 }
@@ -127,6 +134,11 @@
   @apply border-border focus:border-primary focus:ring-transparent;
 }
 
+// table style
+.table-wrapper {
+  @apply overflow-x-auto my-8;
+}
+
 // content style
 .content {
   @apply prose max-w-none;
@@ -135,21 +147,41 @@
   @apply prose-h2:bg-primary-check prose-h2:text-h2-prose-sm sm:prose-h2:text-h2-prose prose-h2:text-white prose-h2:pt-2 prose-h2:px-4 prose-h2:pb-1 prose-h2:sm:pb-1.5 prose-h2:relative prose-h2:sm:mt-20 prose-h2:sm:mb-12 prose-h2:mt-12 prose-h2:mb-8 prose-h2:sm:mx-[-8px] prose-h2:mx-[-4px];
   @apply prose-h2:after:bg-primary prose-h2:after:content-[''] prose-h2:after:w-full prose-h2:after:h-[3px] prose-h2:after:absolute prose-h2:after:bottom-[-6px] prose-h2:after:left-0;
   @apply prose-h3:text-h3-prose-sm sm:prose-h3:text-h3-prose sm:prose-h3:mt-16 prose-h3:mt-12 sm:prose-h3:mb-12 prose-h3:mb-8 prose-h3:px-[0.3em] prose-h3:pt-[0.3em] prose-h3:border-b-2 prose-h3:border-solid prose-h3:border-primary prose-h3:first-letter:text-[1.5em] prose-h3:first-letter:text-primary;
+  @apply prose-h4:text-h4-prose-sm sm:prose-h4:text-h4-prose sm:prose-h4:mt-16 prose-h4:mt-12 sm:prose-h4:mb-12 prose-h4:mb-8 prose-h4:py-2 prose-h4:px-[0.3em] prose-h4:relative;
+  @apply prose-h4:before:content-[''] prose-h4:before:bg-primary prose-h4:before:w-16 prose-h4:before:h-0.5 prose-h4:before:absolute prose-h4:before:bottom-0 prose-h4:before:left-0;
+
   @apply prose-hr:border-border;
   @apply prose-p:sm:text-base prose-p:text-text prose-p:text-sm prose-p:mt-0 prose-p:mb-7 sm:prose-p:mb-8;
-  @apply prose-blockquote:border-primary prose-blockquote:bg-theme-light prose-blockquote:py-1 prose-blockquote:px-4;
-  @apply prose-code:px-1 prose-code:text-primary;
+  @apply prose-blockquote:border-primary prose-blockquote:bg-theme-light prose-blockquote:p-4 prose-blockquote:my-8 break-words;
+  blockquote {
+    // 引用の前後のクオーテーションを削除した
+    p {
+      &:before {
+        content: ''
+      }
+      &:after {
+        content: ''
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  @apply prose-code:px-1 prose-code:text-white;
   @apply prose-pre:rounded-none;
   @apply prose-strong:text-dark;
   @apply prose-a:text-primary prose-a:no-underline hover:prose-a:underline;
-  @apply prose-ul:border prose-ul:border-solid prose-ul:border-primary prose-ul:my-5 prose-ul:py-[11px] prose-ul:pr-5 prose-ul:pl-9;
-  @apply prose-ol:border prose-ol:border-solid prose-ol:border-primary prose-ol:my-5 prose-ol:py-[11px] prose-ol:pr-5 prose-ol:pl-9;
-  @apply prose-li:mt-2.5 prose-li:text-sm prose-li:sm:text-base;
-
-  @apply prose-table:overflow-hidden prose-table:border prose-table:border-border;
-  @apply prose-thead:border-border prose-thead:bg-theme-light prose-th:py-4 prose-th:px-4 prose-th:text-dark;
-  @apply prose-tr:border-border;
-  @apply prose-td:px-3 prose-td:py-4;
+  @apply prose-ul:px-5;
+  @apply prose-ol:px-5;
+  @apply prose-li:mt-2.5 prose-li:text-sm prose-li:sm:text-base prose-li:marker:text-text;
+  @apply prose-table:border-collapse prose-table:m-0;
+  @apply prose-th:py-2 prose-th:px-4 prose-th:text-center prose-th:border prose-th:border-solid prose-th:border-primary prose-th:bg-primary-check prose-th:text-white prose-th:border-r-white prose-th:border-t-primary;
+  @apply prose-td:py-2 prose-td:px-4 prose-td:text-center prose-td:border prose-td:border-solid prose-td:border-primary;
+  th {
+    &:last-child {
+      border-right: 1px solid #156ea4;
+    }
+  }
   
   // デフォルトの表記はこちら
   // @apply prose max-w-none;
@@ -220,5 +252,58 @@
 
   &:hover {
     transform: translateY(-2px);
+  }
+}
+
+// 吹き出しのUI
+.conversation {
+  @apply flex sm:gap-x-8 gap-x-5 mb-8;
+
+  img {
+    @apply sm:max-w-[80px] max-w-[60px] h-full border-2 border-solid rounded-full m-0;
+  }
+
+  &.left {
+    @apply items-start;
+
+    img {
+      @apply border-[#f1f8ff];
+    }
+
+    p {
+      @apply relative max-w-xl p-4 rounded-lg bg-[#f1f8ff] border-[#f1f8ff] text-text sm:text-base-fit text-sm-fit sm:leading-6 leading-5 sm:my-2 m-0;
+  
+      &:before {
+        position: absolute;
+        left: -15px;
+        width: 15px;
+        height: 20px;
+        background-color: #f1f8ff;
+        clip-path: polygon(0 50%, 100% 0, 100% 100%);
+        content: '';
+      }
+    }
+  }
+
+  &.right {
+    @apply items-start;
+
+    img {
+      @apply border-[#fef5f5];
+    }
+
+    p {
+      @apply relative max-w-xl py-3 px-4 rounded-lg bg-[#fef5f5] border-[#fef5f5] text-text sm:text-base-fit text-sm-fit sm:leading-6 leading-5 sm:my-2 m-0;
+  
+      &:before {
+        position: absolute;
+        right: -15px;
+        width: 15px;
+        height: 20px;
+        background-color: #fef5f5;
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+        content: '';
+      }
+    }
   }
 }

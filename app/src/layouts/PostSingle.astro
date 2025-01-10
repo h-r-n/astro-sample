@@ -7,12 +7,14 @@ import type { PostData } from "@/types";
 import AroundPost from "./components/AroundPost.astro";
 import RelatedPosts from "./components/RelatedPosts.astro";
 import Toc from "./components/Toc.astro";
+import Spacer from "./components/Spacer.astro";
 import LinkCard from "./components/LinkCard.astro";
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, remarkPluginFrontmatter } = await post.render();
 const { title, categories, image, date, tags }: PostData = post.data;
 const blogDate = dateBlogFormat(date);
+const minutesRead = Math.ceil(remarkPluginFrontmatter.minutesRead)
 ---
 
 <section class="section">
@@ -55,21 +57,25 @@ const blogDate = dateBlogFormat(date);
                 height={500}
                 width={1000}
                 alt={title}
-                class="mb-8"
+                class="mb-4"
               />
             )
           }
+          <div class="items-center sm:text-xs text-[11px] underline mb-8 text-right">
+            この記事は<span class="sm:text-sm text-xs text-primary font-bold">約{minutesRead}分</span>で読めます
+          </div>
           <div class="content mb-16 text-left">
             <Content components={{
               Toc,
-              LinkCard
+              LinkCard,
+              Spacer,
             }} />
             <!-- <Markdown content={post.body} components={shortcodes} /> -->
           </div>
           <!-- カテゴリとタグの下部表示 -->
           <div class="mb-8 items-center flex flex-wrap text-xs gap-x-2.5 gap-y-1">
             <div class="items-center text-sm flex flex-wrap gap-x-2">
-              <BiSolidCategory className="text-primary"/>
+              {categories.length > 0 && <BiSolidCategory className="text-primary"/>}
               {categories.map((category: string, i: number) => (
                 <a
                   href={`/categories/${slugify(category)}`}
@@ -80,7 +86,7 @@ const blogDate = dateBlogFormat(date);
               ))}
             </div>
             <div class="items-center text-sm flex flex-wrap gap-x-2">
-              <BiSolidPurchaseTag className="text-primary"/>
+              {tags.length > 0 && <BiSolidPurchaseTag className="text-primary"/>}
               {tags.map((tag: string, i: number) => (
                 <a
                   href={`/tags/${slugify(tag)}`}
@@ -93,12 +99,7 @@ const blogDate = dateBlogFormat(date);
           </div>
           <AroundPost post={post} />
           <!-- 関連する記事 -->
-          <div>
-            <div class="mb-6 sm:mb-7 text-base sm:text-xl font-bold border-l-8 border-primary border-double py-[0.3em] px-[0.5em]">
-              関連記事
-            </div>
-            <RelatedPosts post={post} />
-          </div>
+          <RelatedPosts post={post} />
         </article>
       </div>
     </div>
