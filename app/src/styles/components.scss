@@ -152,7 +152,7 @@
 
   @apply prose-hr:border-border;
   @apply prose-p:sm:text-base prose-p:text-text prose-p:text-sm prose-p:mt-0 prose-p:mb-7 sm:prose-p:mb-8;
-  @apply prose-blockquote:border-primary prose-blockquote:bg-theme-light prose-blockquote:p-4 prose-blockquote:my-8;
+  @apply prose-blockquote:border-primary prose-blockquote:bg-theme-light prose-blockquote:p-4 prose-blockquote:my-8 break-words;
   blockquote {
     // 引用の前後のクオーテーションを削除した
     p {
