@@ -173,7 +173,7 @@
   @apply prose-a:text-primary prose-a:no-underline hover:prose-a:underline;
   @apply prose-ul:px-5;
   @apply prose-ol:px-5;
-  @apply prose-li:mt-2.5 prose-li:text-sm prose-li:sm:text-base;
+  @apply prose-li:mt-2.5 prose-li:text-sm prose-li:sm:text-base prose-li:marker:text-text;
   @apply prose-table:border-collapse prose-table:m-0;
   @apply prose-th:py-2 prose-th:px-4 prose-th:text-center prose-th:border prose-th:border-solid prose-th:border-primary prose-th:bg-primary-check prose-th:text-white prose-th:border-r-white prose-th:border-t-primary;
   @apply prose-td:py-2 prose-td:px-4 prose-td:text-center prose-td:border prose-td:border-solid prose-td:border-primary;
