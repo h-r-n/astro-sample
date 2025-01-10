@@ -254,3 +254,56 @@
     transform: translateY(-2px);
   }
 }
+
+// 吹き出しのUI
+.conversation {
+  @apply flex sm:gap-x-8 gap-x-5 mb-8;
+
+  img {
+    @apply sm:max-w-[80px] max-w-[60px] h-full border-2 border-solid rounded-full m-0;
+  }
+
+  &.left {
+    @apply items-start;
+
+    img {
+      @apply border-[#f1f8ff];
+    }
+
+    p {
+      @apply relative max-w-xl p-4 rounded-lg bg-[#f1f8ff] border-[#f1f8ff] text-text sm:text-base-fit text-sm-fit sm:leading-6 leading-5 sm:my-2 m-0;
+  
+      &:before {
+        position: absolute;
+        left: -15px;
+        width: 15px;
+        height: 20px;
+        background-color: #f1f8ff;
+        clip-path: polygon(0 50%, 100% 0, 100% 100%);
+        content: '';
+      }
+    }
+  }
+
+  &.right {
+    @apply items-start;
+
+    img {
+      @apply border-[#fef5f5];
+    }
+
+    p {
+      @apply relative max-w-xl py-3 px-4 rounded-lg bg-[#fef5f5] border-[#fef5f5] text-text sm:text-base-fit text-sm-fit sm:leading-6 leading-5 sm:my-2 m-0;
+  
+      &:before {
+        position: absolute;
+        right: -15px;
+        width: 15px;
+        height: 20px;
+        background-color: #fef5f5;
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+        content: '';
+      }
+    }
+  }
+}
