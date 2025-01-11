@@ -1,3 +1,7 @@
+## 特徴
+
+## ページの説明
+
 ## 記事で設定する項目
 
 | No. | 項目名 | 概要 | 記入例 |
@@ -42,4 +46,20 @@ Noticeを入れたい箇所に以下のタグを挿入する
 <Conversation direction="left">会話を挿入する場合はConversastionタグを呼び出す。directionを「right」にすると女性アイコン、directionを「left」にすると男性アイコンが表示される</Conversation>
 
 <Conversation direction="right">会話を挿入する場合はConversastionタグを呼び出す。directionを「right」にすると女性アイコン、directionを「left」にすると男性アイコンが表示される</Conversation>
+```
+
+### FAQを入れたい
+FAQを入れたい箇所に以下のタグを挿入する
+```mdx
+<FaqWrapper>
+  <Faq 
+    q="これは質問の時に使う引数です"
+    a="これは回答の時に使う引数です"
+  />
+
+  <Faq 
+    q="これは質問の時に使う引数です"
+    a="これは回答の時に使う引数です"
+  />
+</FaqWrapper>
 ```
