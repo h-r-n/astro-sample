@@ -307,3 +307,17 @@
     }
   }
 }
+
+// FAQ
+.faq {
+  @apply mb-8;
+
+  .question {
+    @apply relative py-4 pr-4 sm:pl-12 pl-10 m-0 sm:text-base sm:leading-6 text-sm leading-5;
+    @apply before:bg-[#e06f6c] before:text-white before:content-['Q'] before:block before:left-0 before:leading-loose before:absolute before:text-center before:sm:w-8 before:w-7 before:top-3;
+  }
+  .answer {
+    @apply relative py-4 pr-4 sm:pl-12 pl-10 m-0 sm:text-base sm:leading-6 text-sm leading-5;
+    @apply before:bg-primary before:text-white before:content-['A'] before:block before:left-0 before:leading-loose before:absolute before:text-center before:sm:w-8 before:w-7 before:top-3 before:font-semibold;
+  }
+}

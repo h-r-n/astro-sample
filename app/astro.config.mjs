@@ -32,6 +32,8 @@ export default defineConfig({
         "@/shortcodes/Video",
         "@/shortcodes/Youtube",
         "@/shortcodes/Conversation",
+        "@/shortcodes/FaqWrapper",
+        "@/shortcodes/Faq",
       ],
     }),
     mdx(),
