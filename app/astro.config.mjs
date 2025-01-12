@@ -6,6 +6,7 @@ import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
 import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
+import remarkDirective from "remark-directive";
 import config from "./src/config/config.json";
 import { rehypeTableWrap } from './src/plugins/rehypeTableWrap'
 import { remarkReadingTime } from "./src/plugins/remarkReadingTime";
@@ -40,6 +41,7 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [
+      remarkDirective,
       remarkToc,
       remarkReadingTime,
       [
