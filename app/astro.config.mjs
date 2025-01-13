@@ -6,9 +6,13 @@ import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
 import remarkCollapse from "remark-collapse";
 import remarkToc from "remark-toc";
+import remarkDirective from "remark-directive";
 import config from "./src/config/config.json";
 import { rehypeTableWrap } from './src/plugins/rehypeTableWrap'
 import { remarkReadingTime } from "./src/plugins/remarkReadingTime";
+import { remarkParseDirective } from "./src/plugins/remarkParseDirective";
+import { AdmonitionComponent } from "./src/plugins/rehypeComponentAdmonition.mjs";
+import rehypeComponents from "rehype-components";
 
 // https://astro.build/config
 export default defineConfig({
@@ -40,6 +44,8 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [
+      remarkDirective,
+      remarkParseDirective,
       remarkToc,
       remarkReadingTime,
       [
@@ -51,6 +57,18 @@ export default defineConfig({
     ],
     rehypePlugins: [
       rehypeTableWrap,
+      [
+        rehypeComponents,
+        {
+          components: {
+            note: (x, y) => AdmonitionComponent(x, y, "note"),
+            tip: (x, y) => AdmonitionComponent(x, y, "tip"),
+            important: (x, y) => AdmonitionComponent(x, y, "important"),
+            caution: (x, y) => AdmonitionComponent(x, y, "caution"),
+            warning: (x, y) => AdmonitionComponent(x, y, "warning"),
+          },
+        },
+      ],
     ],
     shikiConfig: {
       theme: "one-dark-pro",

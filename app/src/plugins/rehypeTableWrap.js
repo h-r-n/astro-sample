@@ -8,13 +8,6 @@ export function rehypeTableWrap() {
         const wrapper = h('div', { class: 'table-wrapper' }, [node])
         parent.children[index] = wrapper
       }
-      if (node.tagName === 'th' || node.tagName === 'td') {
-        const align = node.properties.align
-        if (align) {
-          node.properties.style = `text-align: ${align};`
-          delete node.properties.align
-        }
-      }
     })
   }
 }
